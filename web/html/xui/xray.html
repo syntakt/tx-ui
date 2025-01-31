@@ -215,7 +215,7 @@
                         </a-col>
                       </a-row>
                       <setting-list-item type="switch" title='{{ i18n "pages.xray.dnsLog"}}' desc='{{ i18n "pages.xray.dnsLogDesc"}}' v-model="dnslog"></setting-list-item>
-                      <setting-list-item type="switch" title='{{ i18n "pages.xray.outBoundTraffic"}}' desc='{{ i18n "pages.xray.outBoundTrafficDesc"}}' v-model="outboundtraffic"></setting-list-item>
+                      <setting-list-item type="switch" title='{{ i18n "pages.xray.outBoundTraffic"}}' desc='{{ i18n "pages.xray.outBoundTrafficDesc"}}' v-model="outboundTraffic"></setting-list-item>
                     </a-list-item>
                   </a-collapse-panel>
                   <a-collapse-panel header='{{ i18n "pages.xray.blockConfigs"}}'>
@@ -1824,7 +1824,7 @@
                     this.templateSettings = newTemplateSettings;
                 }
             },
-            outBoundTraffic: {
+            outboundTraffic: {
                 get: function () {
                     if (!this.templateSettings || !this.templateSettings.policy.system || !this.templateSettings.policy.system.statsOutboundDownlink) return false;
                     return this.templateSettings.policy.system.statsOutboundDownlink;
@@ -1835,8 +1835,7 @@
                     newTemplateSettings.policy.system.statsOutboundUplink = newValue;
                     this.templateSettings = newTemplateSettings;
                 }
-            }
-            ,
+            },
             maskAddressLog: {
                 get: function () {
                     if (!this.templateSettings || !this.templateSettings.log || !this.templateSettings.log.maskAddress) return "";
