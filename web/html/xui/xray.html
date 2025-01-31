@@ -143,6 +143,7 @@
                           </a-select>
                         </a-col>
                       </a-row>
+                      <setting-list-item type="switch" title='{{ i18n "pages.xray.outBoundTraffic"}}' desc='{{ i18n "pages.xray.outBoundTrafficDesc"}}' v-model="outboundTraffic"></setting-list-item>
                     </a-list-item>
                   </a-collapse-panel>
                   <a-collapse-panel header='{{ i18n "pages.xray.logConfigs" }}'>
@@ -215,7 +216,6 @@
                         </a-col>
                       </a-row>
                       <setting-list-item type="switch" title='{{ i18n "pages.xray.dnsLog"}}' desc='{{ i18n "pages.xray.dnsLogDesc"}}' v-model="dnslog"></setting-list-item>
-                      <setting-list-item type="switch" title='{{ i18n "pages.xray.outBoundTraffic"}}' desc='{{ i18n "pages.xray.outBoundTrafficDesc"}}' v-model="outboundTraffic"></setting-list-item>
                     </a-list-item>
                   </a-collapse-panel>
                   <a-collapse-panel header='{{ i18n "pages.xray.blockConfigs"}}'>
