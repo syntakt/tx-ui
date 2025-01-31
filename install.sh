@@ -113,22 +113,22 @@ fi
 install_base() {
     case "${release}" in
     ubuntu | debian | armbian)
-        apt-get update && apt-get install -y -q wget curl tar tzdata
+        apt-get update && apt-get install -y -q wget curl tar tzdata socat
         ;;
     centos | almalinux | rocky | ol)
-        yum -y update && yum install -y -q wget curl tar tzdata
+        yum -y update && yum install -y -q wget curl tar tzdata socat
         ;;
     fedora | amzn)
-        dnf -y update && dnf install -y -q wget curl tar tzdata
+        dnf -y update && dnf install -y -q wget curl tar tzdata socat
         ;;
     arch | manjaro | parch)
-        pacman -Syu && pacman -Syu --noconfirm wget curl tar tzdata
+        pacman -Syu && pacman -Syu --noconfirm wget curl tar tzdata socat
         ;;
     opensuse-tumbleweed)
-        zypper refresh && zypper -q install -y wget curl tar timezone
+        zypper refresh && zypper -q install -y wget curl tar timezone socat
         ;;
     *)
-        apt-get update && apt install -y -q wget curl tar tzdata
+        apt-get update && apt install -y -q wget curl tar tzdata socat
         ;;
     esac
 }
@@ -144,13 +144,112 @@ config_after_install() {
     local existing_password=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'password: .+' | awk '{print $2}')
     local existing_webBasePath=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'webBasePath: .+' | awk '{print $2}')
     local existing_port=$(/usr/local/x-ui/x-ui setting -show true | grep -Eo 'port: .+' | awk '{print $2}')
-    local server_ip=$(curl -s https://api.ipify.org)
+    local server_ip=$(hostname -I | awk '{print $1}')
+    # check for acme.sh first
+    if ! command -v ~/.acme.sh/acme.sh &>/dev/null; then
+        echo "acme.sh could not be found. we will install it"
+        LOGI "Installing acme.sh..."
+        cd ~ || return 1 # Ensure you can change to the home directory
+        curl -s https://get.acme.sh | sh
+        if [ $? -ne 0 ]; then
+            LOGE "Installation of acme.sh failed."
+            return 1
+        else
+            LOGI "Installation of acme.sh succeeded."
+        fi
+    fi
 
     if [[ ${#existing_webBasePath} -lt 4 ]]; then
         if [[ "$existing_username" == "admin" && "$existing_password" == "admin" ]]; then
             local config_webBasePath=$(gen_random_string 15)
             local config_username=$(gen_random_string 10)
             local config_password=$(gen_random_string 10)
+
+            # get the domain here, and we need to verify it
+            local domain=""
+            read -p "Please enter your domain name: " domain
+            LOGD "Your domain is: ${domain}, checking it..."
+
+            # check if there already exists a certificate
+            local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
+            if [ "${currentCert}" == "${domain}" ]; then
+                local certInfo=$(~/.acme.sh/acme.sh --list)
+                LOGE "System already has certificates for this domain. Cannot issue again. Current certificate details:"
+                LOGI "$certInfo"
+                exit 1
+            else
+                LOGI "Your domain is ready for issuing certificates now..."
+            fi
+
+            # create a directory for the certificate
+            certPath="/root/cert/${domain}"
+            if [ ! -d "$certPath" ]; then
+                mkdir -p "$certPath"
+            else
+                rm -rf "$certPath"
+                mkdir -p "$certPath"
+            fi
+
+            # get the port number for the standalone server
+            local WebPort=80
+            read -p "Please choose which port to use (default is 80): " WebPort
+            if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
+                LOGE "Your input ${WebPort} is invalid, will use default port 80."
+                WebPort=80
+            fi
+            LOGI "Will use port: ${WebPort} to issue certificates. Please make sure this port is open."
+
+            # issue the certificate
+            ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+            ~/.acme.sh/acme.sh --issue -d ${domain} --listen-v6 --standalone --httpport ${WebPort}
+            if [ $? -ne 0 ]; then
+                LOGE "Issuing certificate failed, please check logs."
+                rm -rf ~/.acme.sh/${domain}
+                exit 1
+            else
+                LOGE "Issuing certificate succeeded, installing certificates..."
+            fi
+
+            # install the certificate
+            ~/.acme.sh/acme.sh --installcert -d ${domain} \
+                --key-file /root/cert/${domain}/privkey.pem \
+                --fullchain-file /root/cert/${domain}/fullchain.pem
+
+            if [ $? -ne 0 ]; then
+                LOGE "Installing certificate failed, exiting."
+                rm -rf ~/.acme.sh/${domain}
+                exit 1
+            else
+                LOGI "Installing certificate succeeded, enabling auto renew..."
+            fi
+
+            # enable auto-renew
+            ~/.acme.sh/acme.sh --upgrade --auto-upgrade
+            if [ $? -ne 0 ]; then
+                LOGE "Auto renew failed, certificate details:"
+                ls -lah cert/*
+                chmod 755 $certPath/*
+                exit 1
+            else
+                LOGI "Auto renew succeeded, certificate details:"
+                ls -lah cert/*
+                chmod 755 $certPath/*
+            fi
+
+            # Set panel paths after successful certificate installation
+            local webCertFile="/root/cert/${domain}/fullchain.pem"
+            local webKeyFile="/root/cert/${domain}/privkey.pem"
+
+            if [[ -f "$webCertFile" && -f "$webKeyFile" ]]; then
+                /usr/local/x-ui/x-ui cert -webCert "$webCertFile" -webCertKey "$webKeyFile"
+                LOGI "Panel paths set for domain: $domain"
+                LOGI "  - Certificate File: $webCertFile"
+                LOGI "  - Private Key File: $webKeyFile"
+                echo -e "${green}Access URL: https://${domain}:${existing_port}${existing_webBasePath}${plain}"
+                restart
+            else
+                LOGE "Error: Certificate or private key file not found for domain: $domain."
+            fi
 
             read -p "Would you like to customize the Panel Port settings? (If not, a random port will be applied) [y/n]: " config_confirm
             if [[ "${config_confirm}" == "y" || "${config_confirm}" == "Y" ]]; then
@@ -168,7 +267,7 @@ config_after_install() {
             echo -e "${green}Password: ${config_password}${plain}"
             echo -e "${green}Port: ${config_port}${plain}"
             echo -e "${green}WebBasePath: ${config_webBasePath}${plain}"
-            echo -e "${green}Access URL: http://${server_ip}:${config_port}/${config_webBasePath}${plain}"
+            echo -e "${green}Access URL: https://${domain}:${config_port}/${config_webBasePath}${plain}"
             echo -e "###############################################"
             echo -e "${yellow}If you forgot your login info, you can type 'x-ui settings' to check${plain}"
         else
@@ -176,7 +275,7 @@ config_after_install() {
             echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
             /usr/local/x-ui/x-ui setting -webBasePath "${config_webBasePath}"
             echo -e "${green}New WebBasePath: ${config_webBasePath}${plain}"
-            echo -e "${green}Access URL: http://${server_ip}:${existing_port}/${config_webBasePath}${plain}"
+            echo -e "${green}Access URL: https://${domain}:${existing_port}/${config_webBasePath}${plain}"
         fi
     else
         if [[ "$existing_username" == "admin" && "$existing_password" == "admin" ]]; then
