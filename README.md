@@ -1,7 +1,7 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
 **An Advanced Web Panel • Built on Xray Core** \
-**This project is a fork of 3x-ui panel.**
+**This project is a fork of tx-ui panel.**
 
 [![](https://img.shields.io/github/v/release/AghayeCoder/tx-ui.svg)](https://github.com/AghayeCoder/tx-ui/releases)
 [![](https://img.shields.io/github/actions/workflow/status/AghayeCoder/tx-ui/release.yml.svg)](#)
@@ -143,7 +143,7 @@ systemctl restart x-ui
 
    ```sh
    git clone https://github.com/AghayeCoder/tx-ui.git
-   cd 3x-ui
+   cd tx-ui
    ```
 
 3. **Start the Service:**
@@ -163,26 +163,26 @@ systemctl restart x-ui
       -v $PWD/cert/:/root/cert/ \
       --network=host \
       --restart=unless-stopped \
-      --name 3x-ui \
+      --name tx-ui \
       ghcr.io/AghayeCoder/tx-ui:latest
    ```
 
 4. **Update to the Latest Version:**
 
    ```sh
-   cd 3x-ui
+   cd tx-ui
    docker compose down
-   docker compose pull 3x-ui
+   docker compose pull tx-ui
    docker compose up -d
    ```
 
-5. **Remove 3x-ui from Docker:**
+5. **Remove tx-ui from Docker:**
 
    ```sh
-   docker stop 3x-ui
-   docker rm 3x-ui
+   docker stop tx-ui
+   docker rm tx-ui
    cd --
-   rm -r 3x-ui
+   rm -r tx-ui
    ```
 
 </details>
@@ -470,7 +470,7 @@ Enter the user ID in input field number 4. The Telegram accounts with this id wi
 
 #### Usage
 
-- [API Documentation](https://www.postman.com/hsanaei/3x-ui/collection/q1l5l0u/3x-ui)
+- [API Documentation](https://www.postman.com/aghayecoder/tx-ui/collection/q1l5l0u/tx-ui)
 - `/login` with `POST` user data: `{username: '', password: ''}` for login
 - `/panel/api/inbounds` base for following actions:
 

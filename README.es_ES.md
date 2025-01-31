@@ -1,7 +1,7 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
 **Un Panel Web Avanzado • Construido sobre Xray Core** \
-**Este proyecto es una bifurcación del panel 3x-ui.**
+**Este proyecto es una bifurcación del panel tx-ui.**
 
 [![](https://img.shields.io/github/v/release/AghayeCoder/tx-ui.svg)](https://github.com/AghayeCoder/tx-ui/releases)
 [![](https://img.shields.io/github/actions/workflow/status/AghayeCoder/tx-ui/release.yml.svg)](#)
@@ -140,7 +140,7 @@ systemctl restart x-ui
 
    ```sh
    git clone https://github.com/AghayeCoder/tx-ui.git
-   cd 3x-ui
+   cd tx-ui
    ```
 
 3. Inicia el Servicio
@@ -158,26 +158,26 @@ systemctl restart x-ui
       -v $PWD/cert/:/root/cert/ \
       --network=host \
       --restart=unless-stopped \
-      --name 3x-ui \
+      --name tx-ui \
       ghcr.io/AghayeCoder/tx-ui:latest
    ```
 
 actualizar a la última versión
 
    ```sh
-    cd 3x-ui
+    cd tx-ui
     docker compose down
-    docker compose pull 3x-ui
+    docker compose pull tx-ui
     docker compose up -d
    ```
 
-eliminar 3x-ui de docker
+eliminar tx-ui de docker
 
    ```sh
-    docker stop 3x-ui
-    docker rm 3x-ui
+    docker stop tx-ui
+    docker rm tx-ui
     cd --
-    rm -r 3x-ui
+    rm -r tx-ui
    ```
 
 </details>
@@ -462,7 +462,7 @@ Ingresa el ID de chat de usuario en el campo de entrada número 4. Las cuentas d
 
 #### Uso
 
-- [Documentación de API](https://www.postman.com/hsanaei/3x-ui/collection/q1l5l0u/3x-ui)
+- [Documentación de API](https://www.postman.com/aghayecoder/tx-ui/collection/q1l5l0u/tx-ui)
 - `/login` con `POST` datos de usuario: `{username: '', password: ''}` para iniciar sesión
 - `/panel/api/inbounds` base para las siguientes acciones:
 

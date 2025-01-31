@@ -1,7 +1,7 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
 **一个更好的面板 • 基于Xray Core构建** \
-**该项目是 3x-ui 面板的一个分支。**
+**该项目是 tx-ui 面板的一个分支。**
 
 [![](https://img.shields.io/github/v/release/AghayeCoder/tx-ui.svg)](https://github.com/AghayeCoder/tx-ui/releases)
 [![](https://img.shields.io/github/actions/workflow/status/AghayeCoder/tx-ui/release.yml.svg)](#)
@@ -140,7 +140,7 @@ systemctl restart x-ui
 
    ```sh
    git clone https://github.com/AghayeCoder/tx-ui.git
-   cd 3x-ui
+   cd tx-ui
    ```
 
 3. 运行服务：
@@ -158,26 +158,26 @@ systemctl restart x-ui
       -v $PWD/cert/:/root/cert/ \
       --network=host \
       --restart=unless-stopped \
-      --name 3x-ui \
+      --name tx-ui \
       ghcr.io/AghayeCoder/tx-ui:latest
    ```
 
 更新至最新版本
 
    ```sh
-    cd 3x-ui
+    cd tx-ui
     docker compose down
-    docker compose pull 3x-ui
+    docker compose pull tx-ui
     docker compose up -d
    ```
 
-从Docker中删除3x-ui
+从Docker中删除tx-ui
 
    ```sh
-    docker stop 3x-ui
-    docker rm 3x-ui
+    docker stop tx-ui
+    docker rm tx-ui
     cd --
-    rm -r 3x-ui
+    rm -r tx-ui
    ```
 
 </details>
@@ -462,7 +462,7 @@ Web 面板通过 Telegram Bot 支持每日流量、面板登录、数据库备�
 
 #### 使用
 
-- [API 文档](https://www.postman.com/hsanaei/3x-ui/collection/q1l5l0u/3x-ui)
+- [API 文档](https://www.postman.com/aghayecoder/tx-ui/collection/q1l5l0u/tx-ui)
 - `/login` 使用 `POST` 用户名称 & 密码： `{username: '', password: ''}` 登录
 - `/panel/api/inbounds` 以下操作的基础：
 

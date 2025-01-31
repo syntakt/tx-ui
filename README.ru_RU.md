@@ -1,7 +1,7 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
 **Продвинутая веб-панель • Построена на основе Xray Core** \
-**Этот проект является ответвлением панели 3x-ui.**
+**Этот проект является ответвлением панели tx-ui.**
 
 [![](https://img.shields.io/github/v/release/AghayeCoder/tx-ui.svg)](https://github.com/AghayeCoder/tx-ui/releases)
 [![](https://img.shields.io/github/actions/workflow/status/AghayeCoder/tx-ui/release.yml.svg)](#)
@@ -142,7 +142,7 @@ systemctl restart x-ui
 
    ```sh
    git clone https://github.com/AghayeCoder/tx-ui.git
-   cd 3x-ui
+   cd tx-ui
    ```
 
 3. **Запустите сервис:**
@@ -162,26 +162,26 @@ systemctl restart x-ui
       -v $PWD/cert/:/root/cert/ \
       --network=host \
       --restart=unless-stopped \
-      --name 3x-ui \
+      --name tx-ui \
       ghcr.io/AghayeCoder/tx-ui:latest
    ```
 
 4. **Обновление до последней версии:**
 
    ```sh
-   cd 3x-ui
+   cd tx-ui
    docker compose down
-   docker compose pull 3x-ui
+   docker compose pull tx-ui
    docker compose up -d
    ```
 
-5. **Удаление 3x-ui из Docker:**
+5. **Удаление tx-ui из Docker:**
 
    ```sh
-   docker stop 3x-ui
-   docker rm 3x-ui
+   docker stop tx-ui
+   docker rm tx-ui
    cd --
-   rm -r 3x-ui
+   rm -r tx-ui
    ```
 
 </details>
@@ -465,7 +465,7 @@ WARP встроен, и дополнительная установка не т�
 
 #### Использование
 
-- [API документация](https://www.postman.com/hsanaei/3x-ui/collection/q1l5l0u/3x-ui)
+- [API документация](https://www.postman.com/aghayecoder/tx-ui/collection/q1l5l0u/tx-ui)
 - `/login` с `POST`-данными: `{username: '', password: ''}` для входа
 - `/panel/api/inbounds` это базовый путь для следующих действий:
 

@@ -1,4 +1,4 @@
-name: Release 3X-UI
+name: Release TX-UI
 
 on:
   workflow_dispatch:
