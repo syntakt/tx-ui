@@ -112,6 +112,9 @@
 "backupDescription" = "توصیه‌می‌شود قبل‌از واردکردن یک دیتابیس جدید، نسخه پشتیبان تهیه ‌کنید"
 "exportDatabase" = "پشتیبان‌گیری"
 "importDatabase" = "بازگرداندن"
+"upgrade" = "بروزرسانی"
+"upgradeAvail" = "نسخه جدیدی از پنل موجود است"
+"installingPanel" = "نصب پنل شروع شد"
 
 [pages.inbounds]
 "title" = "کاربران"

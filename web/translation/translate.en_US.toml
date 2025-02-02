@@ -112,6 +112,9 @@
 "backupDescription" = "It is recommended to make a backup before restoring a database."
 "exportDatabase" = "Back Up"
 "importDatabase" = "Restore"
+"upgrade" = "UPGRADE"
+"upgradeAvail" = "New panel update is availabe"
+"installingPanel" = "Panel started to install"
 
 [pages.inbounds]
 "title" = "Inbounds"

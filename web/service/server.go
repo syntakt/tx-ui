@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/tcnksm/go-latest"
 	"io"
 	"io/fs"
 	"mime/multipart"
@@ -14,7 +15,9 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
+	"regexp"
 
 	"x-ui/config"
 	"x-ui/database"
@@ -29,6 +32,13 @@ import (
 	"github.com/shirou/gopsutil/v4/load"
 	"github.com/shirou/gopsutil/v4/mem"
 	"github.com/shirou/gopsutil/v4/net"
+)
+
+var (
+	checkedOnce   sync.Once // Ensures check runs only once
+	isOutdated    bool
+	latestVersion string
+	checkErr      error
 )
 
 type ProcessState string
@@ -79,9 +89,11 @@ type Status struct {
 		IPv6 string `json:"ipv6"`
 	} `json:"publicIP"`
 	AppStats struct {
-		Threads uint32 `json:"threads"`
-		Mem     uint64 `json:"mem"`
-		Uptime  uint64 `json:"uptime"`
+		Threads      uint32 `json:"threads"`
+		Mem          uint64 `json:"mem"`
+		Uptime       uint64 `json:"uptime"`
+		TXUpdate     string `json:"tx_update"`
+		PanelVersion string `json:"panel_version"`
 	} `json:"appStats"`
 }
 
@@ -244,7 +256,50 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		status.AppStats.Uptime = 0
 	}
 
+	isOutdated, latestVersion, err := s.CheckForUpdate("AghayeCoder", "tx-ui", config.GetVersion())
+	if err != nil {
+		logger.Error("Error checking for update: ", err)
+	}
+
+	if isOutdated {
+		status.AppStats.TXUpdate = latestVersion
+		status.AppStats.PanelVersion = config.GetVersion()
+	} else {
+		status.AppStats.PanelVersion = config.GetVersion()
+		status.AppStats.TXUpdate = latestVersion
+	}
+
 	return status
+}
+
+func normalizeVersion(tag string) string {
+	re := regexp.MustCompile(`\.0$`) // Match trailing ".0"
+	return re.ReplaceAllString(tag, "") // Remove it
+}
+
+func (s *ServerService) CheckForUpdate(owner, repo, currentVersion string) (bool, string, error) {
+	checkedOnce.Do(func() { // Ensures this block runs only once
+		g := &latest.GithubTag{
+			Owner:      owner,
+			Repository: repo,
+		}
+
+		res, err := latest.Check(g, currentVersion)
+		if err != nil {
+			checkErr = err
+			return
+		}
+
+		isOutdated = res.Outdated
+		latestVersion = normalizeVersion(res.Current)
+		if isOutdated {
+			logger.Info("A new version is available: ", latestVersion)
+		} else {
+			logger.Info("You are using the latest version.")
+		}
+	})
+
+	return isOutdated, latestVersion, checkErr
 }
 
 func (s *ServerService) GetXrayVersions() ([]string, error) {
@@ -417,6 +472,77 @@ func (s *ServerService) UpdateXray(version string) error {
 	}
 
 	return nil
+}
+
+func (s *ServerService) UpdatePanel(version string) {
+	fmt.Println("Starting x-ui installation...")
+
+	// Detect system architecture
+	archMap := map[string]string{
+		"x86_64": "amd64", "x64": "amd64", "amd64": "amd64",
+		"i386": "386", "i686": "386", "x86": "386",
+		"armv8": "arm64", "arm64": "arm64", "aarch64": "arm64",
+		"armv7": "armv7", "arm": "armv7",
+		"armv6": "armv6", "armv5": "armv5", "s390x": "s390x",
+	}
+
+	out, err := exec.Command("uname", "-m").Output()
+	if err != nil {
+		fmt.Println("Error detecting architecture:", err)
+		return
+	}
+	arch := strings.TrimSpace(string(out))
+	if val, exists := archMap[arch]; exists {
+		arch = val
+	} else {
+		fmt.Println("Unsupported CPU architecture!")
+		return
+	}
+
+	// Get latest version if not provided
+	if version == "" {
+		logger.Info("Fetching latest version...")
+		out, err := exec.Command("curl", "-Ls", "https://api.github.com/repos/AghayeCoder/tx-ui/releases/latest").Output()
+		if err != nil {
+			logger.Error("Failed to fetch latest version:", err)
+			return
+		}
+		for _, line := range strings.Split(string(out), "\n") {
+			if strings.Contains(line, "\"tag_name\":") {
+				version = strings.Split(line, ":")[1]
+				version = strings.Trim(version, " \"\t,")
+				break
+			}
+		}
+	}
+
+	// Download x-ui
+	url := fmt.Sprintf("https://github.com/AghayeCoder/tx-ui/releases/download/%s/x-ui-linux-%s.tar.gz", version, arch)
+	filePath := fmt.Sprintf("/usr/local/x-ui-linux-%s.tar.gz", arch)
+	logger.Info("Downloading:", url)
+	err = exec.Command("wget", "-N", "--no-check-certificate", "-O", filePath, url).Run()
+	if err != nil {
+		logger.Error("Download failed:", err)
+		return
+	}
+
+	os.RemoveAll("/usr/local/x-ui/")
+
+	// Extract, configure, and install
+	logger.Debug("Extracting...")
+	exec.Command("tar", "-zxvf", filePath, "-C", "/usr/local/").Run()
+	os.Remove(filePath)
+	exec.Command("chmod", "+x", "/usr/local/x-ui/x-ui").Run()
+	xrayLinux := fmt.Sprintf("/usr/local/x-ui/bin/xray-linux-%s", arch)
+	exec.Command("chmod", "+x", "/usr/local/x-ui/x-ui", xrayLinux).Run()
+	exec.Command("cp", "-f", "/usr/local/x-ui/x-ui.service", "/etc/systemd/system/").Run()
+	exec.Command("wget", "--no-check-certificate", "-O", "/usr/bin/x-ui", "https://raw.githubusercontent.com/AghayeCoder/tx-ui/main/x-ui.sh").Run()
+	exec.Command("chmod", "+x", "/usr/bin/x-ui").Run()
+	exec.Command("systemctl", "daemon-reload").Run()
+	exec.Command("systemctl", "enable", "x-ui").Run()
+	exec.Command("systemctl", "start", "x-ui").Run()
+	exec.Command("x-ui", "restart").Run()
+	logger.Infof("x-ui %s installation finished and is now running!", version)
 }
 
 func (s *ServerService) GetLogs(count string, level string, syslog string) []string {

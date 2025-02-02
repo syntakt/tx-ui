@@ -94,6 +94,13 @@
                   <b>TX-UI:</b>
                   <a rel="noopener" href="https://github.com/AghayeCoder/tx-ui/releases" target="_blank"><a-tag color="green">v{{ .cur_ver }}</a-tag></a>
                   <a rel="noopener" href="https://t.me/TxUiPanel" target="_blank"><a-tag color="green">@TxUiPanel</a-tag></a>
+                  <a-popover v-if="status.appStats.tx_update !== status.appStats.panel_version" overlay-class-name="themeSwitcher.currentTheme">
+                    <span slot="title" style="font-size: 12pt">{{ i18n "pages.index.upgradeAvail" }}</span>
+                    <template slot="content">
+                      <a-tag color="purple" style="cursor: pointer; float: right;" @click="installPanel()">[[ status.appStats.tx_update ]]</a-tag>
+                    </template>
+                    <a-tag color="purple" style="cursor: pointer;">{{ i18n "pages.index.upgrade" }}</a-tag>
+                  </a-popover>
                 </a-card>
               </a-col>
               <a-col :sm="24" :lg="12">
@@ -584,6 +591,17 @@
                 if (!msg.success) {
                     return;
                 }
+            },
+            async installPanel() {
+              this.loading(true);
+              await HttpUtil.post('server/installPanel');
+              const restartMsg = await HttpUtil.post("/panel/setting/restartPanel");
+              this.loading(false);
+              if (restartMsg.success) {
+                this.loading(true);
+                await PromiseUtil.sleep(5000);
+                location.reload();
+              }
             },
             async openLogs(){
                 logModal.loading = true;
