@@ -112,6 +112,9 @@
 "backupDescription" = "Hãy nhớ sao lưu trước khi nhập cơ sở dữ liệu mới."
 "exportDatabase" = "Tải về Cơ sở dữ liệu"
 "importDatabase" = "Tải lên Cơ sở dữ liệu"
+"upgrade" = "NÂNG CẤP"
+"upgradeAvail" = "Bản cập nhật bảng điều khiển mới đã có"
+"installingPanel" = "Bảng điều khiển đã bắt đầu cài đặt"
 
 [pages.inbounds]
 "title" = "Điểm vào (Inbounds)"

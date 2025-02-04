@@ -112,6 +112,9 @@
 "backupDescription" = "Veritabanını geri yüklemeden önce yedek almanız önerilir."
 "exportDatabase" = "Yedekle"
 "importDatabase" = "Geri Yükle"
+"upgrade" = "UPGRADE"
+"upgradeAvail" = "Yeni panel güncellemesi mevcut"
+"installingPanel" = "Panel kurulumu başladı"
 
 [pages.inbounds]
 "title" = "Gelenler"

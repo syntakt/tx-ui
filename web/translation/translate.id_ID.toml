@@ -112,6 +112,9 @@
 "backupDescription" = "Disarankan untuk membuat cadangan sebelum memulihkan database."
 "exportDatabase" = "Cadangkan"
 "importDatabase" = "Pulihkan"
+"upgrade" = "UPGRADE"
+"upgradeAvail" = "Pembaruan panel baru tersedia"
+"installingPanel" = "Panel mulai diinstal"
 
 [pages.inbounds]
 "title" = "Masuk"

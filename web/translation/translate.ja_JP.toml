@@ -112,6 +112,9 @@
 "backupDescription" = "データベースを復元する前にバックアップすることをお勧めします"
 "exportDatabase" = "バックアップ"
 "importDatabase" = "復元"
+"upgrade" = "アップグレード"
+"upgradeAvail" = "新しいパネルのアップデートが利用可能です"
+"installingPanel" = "パネルのインストールが開始されました"
 
 [pages.inbounds]
 "title" = "インバウンド一覧"

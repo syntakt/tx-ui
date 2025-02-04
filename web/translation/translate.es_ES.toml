@@ -112,6 +112,9 @@
 "backupDescription" = "Recuerda hacer una copia de seguridad antes de importar una nueva base de datos."
 "exportDatabase" = "Descargar Base de Datos"
 "importDatabase" = "Cargar Base de Datos"
+"upgrade" = "ACTUALIZAR"
+"upgradeAvail" = "Hay una nueva actualización del panel disponible"
+"installingPanel" = "El panel comenzó a instalarse"
 
 [pages.inbounds]
 "title" = "Entradas"

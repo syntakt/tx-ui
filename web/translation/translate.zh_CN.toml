@@ -112,6 +112,9 @@
 "backupDescription" = "恢复数据库之前建议进行备份"
 "exportDatabase" = "备份"
 "importDatabase" = "恢复"
+"upgrade" = "升级"
+"upgradeAvail" = "新面板更新可用"
+"installingPanel" = "面板已开始安装"
 
 [pages.inbounds]
 "title" = "入站列表"
