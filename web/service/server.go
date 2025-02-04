@@ -9,15 +9,16 @@ import (
 	"io"
 	"io/fs"
 	"mime/multipart"
+	stdnet "net"
 	"net/http"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"regexp"
 
 	"x-ui/config"
 	"x-ui/database"
@@ -107,23 +108,12 @@ type ServerService struct {
 }
 
 func getPublicIP(url string) string {
-	resp, err := http.Get(url)
+	conn, err := stdnet.Dial("udp", url)
 	if err != nil {
 		return "N/A"
 	}
-	defer resp.Body.Close()
-
-	ip, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "N/A"
-	}
-
-	ipString := string(ip)
-	if ipString == "" {
-		return "N/A"
-	}
-
-	return ipString
+	defer conn.Close()
+	return conn.LocalAddr().(*stdnet.UDPAddr).IP.String()
 }
 
 func (s *ServerService) GetStatus(lastStatus *Status) *Status {
@@ -229,8 +219,8 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		logger.Warning("get udp connections failed:", err)
 	}
 
-	status.PublicIP.IPv4 = getPublicIP("https://api.ipify.org")
-	status.PublicIP.IPv6 = getPublicIP("https://api6.ipify.org")
+	status.PublicIP.IPv4 = getPublicIP("8.8.8.8:80")
+	status.PublicIP.IPv6 = getPublicIP("[2001:4860:4860::8888]:80")
 
 	if s.xrayService.IsXrayRunning() {
 		status.Xray.State = Running
@@ -273,7 +263,7 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 }
 
 func normalizeVersion(tag string) string {
-	re := regexp.MustCompile(`\.0$`) // Match trailing ".0"
+	re := regexp.MustCompile(`\.0$`)    // Match trailing ".0"
 	return re.ReplaceAllString(tag, "") // Remove it
 }
 
