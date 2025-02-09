@@ -1,5 +1,11 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
+<p align="center">
+  <picture>
+    <img alt="tx-ui" src="./media/tx-ui-dark.png" style="width:512px;height:512px;">
+  </picture>
+</p>
+
 **一个更好的面板 • 基于Xray Core构建** \
 **该项目是 3x-ui 面板的一个分支。**
 

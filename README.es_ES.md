@@ -1,5 +1,11 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
+<p align="center">
+  <picture>
+    <img alt="tx-ui" src="./media/tx-ui-dark.png" style="width:512px;height:512px;">
+  </picture>
+</p>
+
 **Un Panel Web Avanzado • Construido sobre Xray Core** \
 **Este proyecto es una bifurcación del panel 3x-ui.**
 
@@ -274,6 +280,7 @@ Nuestra plataforma ofrece compatibilidad con una amplia gama de arquitecturas y 
 
 ## Características
 
+- Forzar la instalación del panel mediante HTTPS
 - Monitoreo del Estado del Sistema
 - Búsqueda dentro de todas las reglas de entrada y clientes
 - Tema Oscuro/Claro
@@ -288,6 +295,7 @@ Nuestra plataforma ofrece compatibilidad con una amplia gama de arquitecturas y 
 - Corrige rutas de API (la configuración del usuario se creará con la API)
 - Soporta cambiar las configuraciones por diferentes elementos proporcionados en el panel.
 - Soporta exportar/importar base de datos desde el panel
+- Actualizador de aplicaciones integrado
 
 
 ## Configuración Predeterminada del Panel
@@ -333,19 +341,6 @@ Si elige no modificar estas configuraciones, se generarán aleatoriamente (esto 
 
 </details>
 
-## Configuración de WARP
-
-<details>
-  <summary>Haz clic para ver los detalles de la configuración de WARP</summary>
-
-#### Uso
-
-**Para versiones `v2.1.0` y posteriores:**
-
-WARP está integrado, no se requiere instalación adicional. Simplemente habilita la configuración necesaria en el panel.
-
-</details>
-
 ## Límite de IP
 
 <details>
@@ -354,11 +349,6 @@ WARP está integrado, no se requiere instalación adicional. Simplemente habilit
 #### Uso
 
 **Nota:** El Límite de IP no funcionará correctamente cuando uses Túnel IP.
-
-- **Para versiones hasta `v1.6.1`:**
-  - El límite de IP está integrado en el panel.
-
-**Para versiones `v1.7.0` y posteriores:**
 
 Para habilitar la funcionalidad de límite de IP, necesitas instalar `fail2ban` y los archivos requeridos siguiendo estos pasos:
 
@@ -373,20 +363,6 @@ Para habilitar la funcionalidad de límite de IP, necesitas instalar `fail2ban` 
    - **Desinstalar Fail2ban:** Desinstalar Fail2ban con la configuración.
 
 3. Agrega una ruta para el registro de acceso en el panel configurando `Xray Configs/log/Access log` a `./access.log`, luego guarda y reinicia Xray.
-
-- **Para versiones anteriores a `v2.1.3`:**
-  - Necesitas configurar manualmente la ruta del registro de acceso en tu configuración de Xray:
-
-    ```sh
-    "log": {
-      "access": "./access.log",
-      "dnsLog": false,
-      "loglevel": "warning"
-    },
-    ```
-
-- **Para versiones `v2.1.3` y posteriores:**
-  - Hay una opción para configurar `access.log` directamente desde el panel.
 
 </details>
 
@@ -490,9 +466,16 @@ Ingresa el ID de chat de usuario en el campo de entrada número 4. Las cuentas d
 
 - `client.id` para VMESS y VLESS
 - `client.password` para TROJAN
-- `client.email` para Shadowsocks
+- `client.email` para Shadowsocks \.
 
-- [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5%26entityType%3Dcollection%26workspaceId%3Dd64f609f-485a-4951-9b8f-876b3f917124)
+`/panel/api/server` base para las siguientes acciones:
+
+| Método | Ruta             | Acción            |
+|:------:|------------------|-------------------|
+| `GET`  | `"/status"`      | Obtener el estado del servidor |
+| `GET`  | `"/restartCore"` | Reanudar xray-core |
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5%26entityType%3Dcollection%26workspaceId%3Dd64f609f-485a-4951-9b8f-876b3f917124)
 </details>
 
 ## Variables de Entorno

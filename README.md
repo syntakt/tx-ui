@@ -1,5 +1,11 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
+<p align="center">
+  <picture>
+    <img alt="tx-ui" src="./media/tx-ui-dark.png" style="width:512px;height:512px;">
+  </picture>
+</p>
+
 **An Advanced Web Panel • Built on Xray Core** \
 **This project is a fork of 3x-ui panel.**
 
@@ -9,7 +15,8 @@
 [![Downloads](https://img.shields.io/github/downloads/AghayeCoder/tx-ui/total.svg)](#)
 [![License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?longCache=true)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-> **Disclaimer:** This project is only for personal learning and communication, please do not use it for illegal purposes, please do not use it in a production environment
+> **Disclaimer:** This project is only for personal learning and communication, please do not use it for illegal
+> purposes, please do not use it in a production environment
 
 **If this project is helpful to you, you may wish to give it a**:star2:
 
@@ -32,11 +39,11 @@ To manage SSL certificates using ACME:
 2. Run the `x-ui` command in the terminal, then choose `SSL Certificate Management`.
 3. You will be presented with the following options:
 
-   - **Get SSL:** Obtain SSL certificates.
-   - **Revoke:** Revoke existing SSL certificates.
-   - **Force Renew:** Force renewal of SSL certificates.
-   - **Show Existing Domains:** Display all domain certificates available on the server.  
-   - **Set Certificate Paths for the Panel:** Specify the certificate for your domain to be used by the panel. 
+    - **Get SSL:** Obtain SSL certificates.
+    - **Revoke:** Revoke existing SSL certificates.
+    - **Force Renew:** Force renewal of SSL certificates.
+    - **Show Existing Domains:** Display all domain certificates available on the server.
+    - **Set Certificate Paths for the Panel:** Specify the certificate for your domain to be used by the panel.
 
 ### Certbot
 
@@ -50,7 +57,8 @@ certbot renew --dry-run
 
 ### Cloudflare
 
-The management script includes a built-in SSL certificate application for Cloudflare. To use this script to apply for a certificate, you need the following:
+The management script includes a built-in SSL certificate application for Cloudflare. To use this script to apply for a
+certificate, you need the following:
 
 - Cloudflare registered email
 - Cloudflare Global API Key
@@ -66,7 +74,7 @@ The management script includes a built-in SSL certificate application for Cloudf
    ![](media/APIKey2.png)
 
 When using, just enter your `domain name`, `email`, and `API KEY`. The diagram is as follows:
-   ![](media/DetailEnter.png)
+![](media/DetailEnter.png)
 
 
 </details>
@@ -152,9 +160,10 @@ systemctl restart x-ui
    docker compose up -d
    ```
 
-  Add ```--pull always``` flag to make docker automatically recreate container if a newer image is pulled. See https://docs.docker.com/reference/cli/docker/container/run/#pull for more info.
+Add ```--pull always``` flag to make docker automatically recreate container if a newer image is pulled.
+See https://docs.docker.com/reference/cli/docker/container/run/#pull for more info.
 
-   **OR**
+**OR**
 
    ```sh
    docker run -itd \
@@ -188,10 +197,12 @@ systemctl restart x-ui
 </details>
 
 ## Nginx Settings
+
 <details>
   <summary>Click for Reverse Proxy Configuration</summary>
 
 #### Nginx Reverse Proxy
+
 ```nginx
 location / {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -206,8 +217,9 @@ location / {
 ```
 
 #### Nginx sub-path
+
 - Ensure that the "URI Path" in the `/sub` panel settings is the same.
-- The `url` in the panel settings needs to end with `/`.   
+- The `url` in the panel settings needs to end with `/`.
 
 ```nginx
 location /sub {
@@ -221,6 +233,7 @@ location /sub {
     proxy_pass http://127.0.0.1:2053;
 }
 ```
+
 </details>
 
 ## Recommended OS
@@ -246,21 +259,31 @@ location /sub {
 <details>
   <summary>Click for Supported Architectures and devices details</summary>
 
-Our platform offers compatibility with a diverse range of architectures and devices, ensuring flexibility across various computing environments. The following are key architectures that we support:
+Our platform offers compatibility with a diverse range of architectures and devices, ensuring flexibility across various
+computing environments. The following are key architectures that we support:
 
-- **amd64**: This prevalent architecture is the standard for personal computers and servers, accommodating most modern operating systems seamlessly.
+- **amd64**: This prevalent architecture is the standard for personal computers and servers, accommodating most modern
+  operating systems seamlessly.
 
-- **x86 / i386**: Widely adopted in desktop and laptop computers, this architecture enjoys broad support from numerous operating systems and applications, including but not limited to Windows, macOS, and Linux systems.
+- **x86 / i386**: Widely adopted in desktop and laptop computers, this architecture enjoys broad support from numerous
+  operating systems and applications, including but not limited to Windows, macOS, and Linux systems.
 
-- **armv8 / arm64 / aarch64**: Tailored for contemporary mobile and embedded devices, such as smartphones and tablets, this architecture is exemplified by devices like Raspberry Pi 4, Raspberry Pi 3, Raspberry Pi Zero 2/Zero 2 W, Orange Pi 3 LTS, and more.
+- **armv8 / arm64 / aarch64**: Tailored for contemporary mobile and embedded devices, such as smartphones and tablets,
+  this architecture is exemplified by devices like Raspberry Pi 4, Raspberry Pi 3, Raspberry Pi Zero 2/Zero 2 W, Orange
+  Pi 3 LTS, and more.
 
-- **armv7 / arm / arm32**: Serving as the architecture for older mobile and embedded devices, it remains widely utilized in devices like Orange Pi Zero LTS, Orange Pi PC Plus, Raspberry Pi 2, among others.
+- **armv7 / arm / arm32**: Serving as the architecture for older mobile and embedded devices, it remains widely utilized
+  in devices like Orange Pi Zero LTS, Orange Pi PC Plus, Raspberry Pi 2, among others.
 
-- **armv6 / arm / arm32**: Geared towards very old embedded devices, this architecture, while less prevalent, is still in use. Devices such as Raspberry Pi 1, Raspberry Pi Zero/Zero W, rely on this architecture.
+- **armv6 / arm / arm32**: Geared towards very old embedded devices, this architecture, while less prevalent, is still
+  in use. Devices such as Raspberry Pi 1, Raspberry Pi Zero/Zero W, rely on this architecture.
 
-- **armv5 / arm / arm32**: An older architecture primarily associated with early embedded systems, it is less common today but may still be found in legacy devices like early Raspberry Pi versions and some older smartphones.
+- **armv5 / arm / arm32**: An older architecture primarily associated with early embedded systems, it is less common
+  today but may still be found in legacy devices like early Raspberry Pi versions and some older smartphones.
 
-- **s390x**: This architecture is commonly used in IBM mainframe computers and offers high performance and reliability for enterprise workloads.
+- **s390x**: This architecture is commonly used in IBM mainframe computers and offers high performance and reliability
+  for enterprise workloads.
+
 </details>
 
 ## Languages
@@ -278,9 +301,9 @@ Our platform offers compatibility with a diverse range of architectures and devi
 - Turkish
 - Português (Brazil)
 
-
 ## Features
 
+- Force HTTPs installation of panel
 - System Status Monitoring
 - Search within all inbounds and clients
 - Dark/Light theme
@@ -295,7 +318,7 @@ Our platform offers compatibility with a diverse range of architectures and devi
 - Fixes API routes (user setting will be created with API)
 - Supports changing configs by different items provided in the panel.
 - Supports export/import database from the panel
-
+- Built-in application updater
 
 ## Default Panel Settings
 
@@ -307,50 +330,40 @@ Our platform offers compatibility with a diverse range of architectures and devi
 If you choose not to modify these settings, they will be generated randomly (this does not apply to Docker).
 
 **Default Settings for Docker:**
+
 - **Username:** admin
 - **Password:** admin
 - **Port:** 2053
 
 ### Database Management:
 
-  You can conveniently perform database Backups and Restores directly from the panel.
+You can conveniently perform database Backups and Restores directly from the panel.
 
 - **Database Path:**
-  - `/etc/x-ui/x-ui.db`
-
+    - `/etc/x-ui/x-ui.db`
 
 ### Web Base Path
 
 1. **Reset Web Base Path:**
-   - Open your terminal.
-   - Run the `x-ui` command.
-   - Select the option to `Reset Web Base Path`.
+    - Open your terminal.
+    - Run the `x-ui` command.
+    - Select the option to `Reset Web Base Path`.
 
 2. **Generate or Customize Path:**
-   - The path will be randomly generated, or you can enter a custom path.
+    - The path will be randomly generated, or you can enter a custom path.
 
 3. **View Current Settings:**
-   - To view your current settings, use the `x-ui settings` command in the terminal or `View Current Settings` in `x-ui`
+    - To view your current settings, use the `x-ui settings` command in the terminal or `View Current Settings` in
+      `x-ui`
 
 ### Security Recommendation:
+
 - For enhanced security, use a long, random word in your URL structure.
 
 **Examples:**
+
 - `http://ip:port/*webbasepath*/panel`
 - `http://domain:port/*webbasepath*/panel`
-
-</details>
-
-## WARP Configuration
-
-<details>
-  <summary>Click for WARP configuration details</summary>
-
-#### Usage
-
-**For versions `v2.1.0` and later:**
-
-WARP is built-in, and no additional installation is required. Simply turn on the necessary configuration in the panel.
 
 </details>
 
@@ -363,38 +376,20 @@ WARP is built-in, and no additional installation is required. Simply turn on the
 
 **Note:** IP Limit won't work correctly when using IP Tunnel.
 
-- **For versions up to `v1.6.1`:**
-  - The IP limit is built-in to the panel
-
-**For versions `v1.7.0` and newer:**
-
 To enable the IP Limit functionality, you need to install `fail2ban` and its required files by following these steps:
 
 1. Run the `x-ui` command in the terminal, then choose `IP Limit Management`.
 2. You will see the following options:
 
-   - **Change Ban Duration:** Adjust the duration of bans.
-   - **Unban Everyone:** Lift all current bans.
-   - **Check Logs:** Review the logs.
-   - **Fail2ban Status:** Check the status of `fail2ban`.
-   - **Restart Fail2ban:** Restart the `fail2ban` service.
-   - **Uninstall Fail2ban:** Uninstall Fail2ban with configuration.
+    - **Change Ban Duration:** Adjust the duration of bans.
+    - **Unban Everyone:** Lift all current bans.
+    - **Check Logs:** Review the logs.
+    - **Fail2ban Status:** Check the status of `fail2ban`.
+    - **Restart Fail2ban:** Restart the `fail2ban` service.
+    - **Uninstall Fail2ban:** Uninstall Fail2ban with configuration.
 
-3. Add a path for the access log on the panel by setting `Xray Configs/log/Access log` to `./access.log` then save and restart xray.
-
-- **For versions before `v2.1.3`:**
-  - You need to set the access log path manually in your Xray configuration:
-
-    ```sh
-    "log": {
-      "access": "./access.log",
-      "dnsLog": false,
-      "loglevel": "warning"
-    },
-    ```
-
-- **For versions `v2.1.3` and newer:**
-  - There is an option for configuring `access.log` directly from the panel.
+3. Add a path for the access log on the panel by setting `Xray Configs/log/Access log` to `./access.log` then save and
+   restart xray.
 
 </details>
 
@@ -405,7 +400,9 @@ To enable the IP Limit functionality, you need to install `fail2ban` and its req
 
 #### Usage
 
-The web panel supports daily traffic, panel login, database backup, system status, client info, and other notification and functions through the Telegram Bot. To use the bot, you need to set the bot-related parameters in the panel, including:
+The web panel supports daily traffic, panel login, database backup, system status, client info, and other notification
+and functions through the Telegram Bot. To use the bot, you need to set the bot-related parameters in the panel,
+including:
 
 - Telegram Token
 - Admin Chat ID(s)
@@ -414,7 +411,6 @@ The web panel supports daily traffic, panel login, database backup, system statu
 - Traffic Cap Notification
 - Database Backup
 - CPU Load Notification
-
 
 **Reference syntax:**
 
@@ -444,22 +440,25 @@ The web panel supports daily traffic, panel login, database backup, system statu
 ### Setting up Telegram bot
 
 - Start [Botfather](https://t.me/BotFather) in your Telegram account:
-    ![Botfather](./media/botfather.png)
+  ![Botfather](./media/botfather.png)
 
-- Create a new Bot using /newbot command: It will ask you 2 questions, A name and a username for your bot. Note that the username has to end with the word "bot".
-    ![Create new bot](./media/newbot.png)
+- Create a new Bot using /newbot command: It will ask you 2 questions, A name and a username for your bot. Note that the
+  username has to end with the word "bot".
+  ![Create new bot](./media/newbot.png)
 
 - Start the bot you've just created. You can find the link to your bot here.
-    ![token](./media/token.png)
+  ![token](./media/token.png)
 
 - Enter your panel and config Telegram bot settings like below:
-![Panel Config](./media/panel-bot-config.png)
+  ![Panel Config](./media/panel-bot-config.png)
 
 Enter your bot token in input field number 3.
-Enter the user ID in input field number 4. The Telegram accounts with this id will be the bot admin. (You can enter more than one, Just separate them with ,)
+Enter the user ID in input field number 4. The Telegram accounts with this id will be the bot admin. (You can enter more
+than one, Just separate them with ,)
 
-- How to get Telegram user ID? Use this [bot](https://t.me/useridinfobot), Start the bot and it will give you the Telegram user ID.
-![User ID](./media/user-id.png)
+- How to get Telegram user ID? Use this [bot](https://t.me/useridinfobot), Start the bot and it will give you the
+  Telegram user ID.
+  ![User ID](./media/user-id.png)
 
 </details>
 
@@ -475,11 +474,11 @@ Enter the user ID in input field number 4. The Telegram accounts with this id wi
 - `/panel/api/inbounds` base for following actions:
 
 | Method | Path                               | Action                                      |
-| :----: | ---------------------------------- | ------------------------------------------- |
+|:------:|------------------------------------|---------------------------------------------|
 | `GET`  | `"/list"`                          | Get all inbounds                            |
 | `GET`  | `"/get/:id"`                       | Get inbound with inbound.id                 |
 | `GET`  | `"/getClientTraffics/:email"`      | Get Client Traffics with email              |
-| `GET`  | `"/getClientTrafficsById/:id"`     | Get client's traffic By ID |
+| `GET`  | `"/getClientTrafficsById/:id"`     | Get client's traffic By ID                  |
 | `GET`  | `"/createbackup"`                  | Telegram bot sends backup to admins         |
 | `POST` | `"/add"`                           | Add inbound                                 |
 | `POST` | `"/del/:id"`                       | Delete Inbound                              |
@@ -495,13 +494,21 @@ Enter the user ID in input field number 4. The Telegram accounts with this id wi
 | `POST` | `"/delDepletedClients/:id"`        | Delete inbound depleted clients (-1: all)   |
 | `POST` | `"/onlines"`                       | Get Online users ( list of emails )         |
 
-\*- The field `clientId` should be filled by:
+\- The field `clientId` should be filled by:
 
 - `client.id` for VMESS and VLESS
 - `client.password` for TROJAN
-- `client.email` for Shadowsocks
+- `client.email` for Shadowsocks \.
 
-- [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5%26entityType%3Dcollection%26workspaceId%3Dd64f609f-485a-4951-9b8f-876b3f917124)
+`/panel/api/server` base for following actions:
+
+| Method | Path             | Action            |
+|:------:|------------------|-------------------|
+| `GET`  | `"/status"`      | Get server status |
+| `GET`  | `"/restartCore"` | Restart xray-core |
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D5146551-dda3cab3-0e33-485f-96f9-d4262f437ac5%26entityType%3Dcollection%26workspaceId%3Dd64f609f-485a-4951-9b8f-876b3f917124)
+
 </details>
 
 ## Environment Variables
@@ -512,7 +519,7 @@ Enter the user ID in input field number 4. The Telegram accounts with this id wi
 #### Usage
 
 | Variable       |                      Type                      | Default       |
-| -------------- | :--------------------------------------------: | :------------ |
+|----------------|:----------------------------------------------:|:--------------|
 | XUI_LOG_LEVEL  | `"debug"` \| `"info"` \| `"warn"` \| `"error"` | `"info"`      |
 | XUI_DEBUG      |                   `boolean`                    | `false`       |
 | XUI_BIN_FOLDER |                    `string`                    | `"bin"`       |
@@ -529,8 +536,10 @@ XUI_BIN_FOLDER="bin" XUI_DB_FOLDER="/etc/x-ui" go build main.go
 
 ## Acknowledgment
 
-- [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (License: **GPL-3.0**): _Enhanced v2ray/xray and v2ray/xray-clients routing rules with built-in Iranian domains and a focus on security and adblocking._
-- [Russia v2ray rules](https://github.com/runetfreedom/russia-v2ray-rules-dat) (License: **GPL-3.0**): _This repository contains automatically updated V2Ray routing rules based on data on blocked domains and addresses in Russia._
+- [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (License: **GPL-3.0**): _Enhanced v2ray/xray and
+  v2ray/xray-clients routing rules with built-in Iranian domains and a focus on security and adblocking._
+- [Russia v2ray rules](https://github.com/runetfreedom/russia-v2ray-rules-dat) (License: **GPL-3.0**): _This repository
+  contains automatically updated V2Ray routing rules based on data on blocked domains and addresses in Russia._
 
 ## Stargazers over Time
 

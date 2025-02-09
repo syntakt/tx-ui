@@ -1,5 +1,11 @@
 [English](/README.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md)
 
+<p align="center">
+  <picture>
+    <img alt="tx-ui" src="./media/tx-ui-dark.png" style="width:512px;height:512px;">
+  </picture>
+</p>
+
 **Продвинутая веб-панель • Построена на основе Xray Core** \
 **Этот проект является ответвлением панели 3x-ui.**
 
