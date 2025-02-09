@@ -9,12 +9,14 @@ import (
 type APIController struct {
 	BaseController
 	inboundController *InboundController
+	serverController  *ServerController
 	Tgbot             service.Tgbot
 }
 
 func NewAPIController(g *gin.RouterGroup) *APIController {
 	a := &APIController{}
 	a.initRouter(g)
+	a.serverRouter(g)
 	return a
 }
 
@@ -50,6 +52,24 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 	}
 
 	for _, route := range inboundRoutes {
+		g.Handle(route.Method, route.Path, route.Handler)
+	}
+}
+
+func (a *APIController) serverRouter(g *gin.RouterGroup) {
+	g = g.Group("/panel/api/server")
+	g.Use(a.checkLogin)
+	a.serverController = NewServerController(g)
+	serverRoutes := []struct {
+		Method  string
+		Path    string
+		Handler gin.HandlerFunc
+	}{
+		{"GET", "/restartCore", a.serverController.restartXrayService},
+		{"GET", "/status", a.serverController.status},
+	}
+
+	for _, route := range serverRoutes {
 		g.Handle(route.Method, route.Path, route.Handler)
 	}
 }
