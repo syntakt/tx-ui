@@ -40,6 +40,7 @@ var (
 	isOutdated    bool
 	latestVersion string
 	checkErr      error
+	resetMutex    sync.Mutex // Protects checkedOnce reset
 )
 
 type ProcessState string
@@ -246,6 +247,7 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		status.AppStats.Uptime = 0
 	}
 
+	s.resetCheckOnceDaily()
 	isOutdated, latestVersion, err := s.CheckForUpdate("AghayeCoder", "tx-ui", config.GetVersion())
 	if err != nil {
 		logger.Error("Error checking for update: ", err)
@@ -265,6 +267,16 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 func normalizeVersion(tag string) string {
 	re := regexp.MustCompile(`\.0$`)    // Match trailing ".0"
 	return re.ReplaceAllString(tag, "") // Remove it
+}
+
+func (s *ServerService) resetCheckOnceDaily() {
+	for {
+		time.Sleep(24 * time.Hour) // Wait for a day
+		resetMutex.Lock()
+		checkedOnce = sync.Once{} // Reset the sync.Once instance
+		resetMutex.Unlock()
+		logger.Debug("Resetting checkOnce for the next daily check...")
+	}
 }
 
 func (s *ServerService) CheckForUpdate(owner, repo, currentVersion string) (bool, string, error) {
