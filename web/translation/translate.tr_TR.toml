@@ -320,7 +320,8 @@
 "muxSett" = "Mux Ayarları"
 "direct" = "Doğrudan Bağlantı"
 "directDesc" = "Belirli bir ülkenin alan adları veya IP aralıkları ile doğrudan bağlantı kurar."
-
+"xrayCronJob" = "Xray-Core Yeniden Başlatma Aralıkları"
+"xrayCronJobDesc" = "Xray-Core'un otomatik yeniden başlatma aralıkları. (birim: saat | 0 = devre dışı)"
 
 [pages.xray]
 "title" = "Xray Yapılandırmaları"
