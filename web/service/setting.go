@@ -36,6 +36,7 @@ var defaultValueMap = map[string]string{
 	"pageSize":           "50",
 	"expireDiff":         "0",
 	"trafficDiff":        "0",
+	"xrayCronJob":		  "0",
 	"remarkModel":        "-ieo",
 	"timeLocation":       "Local",
 	"tgBotEnable":        "false",
@@ -347,6 +348,14 @@ func (s *SettingService) GetTrafficDiff() (int, error) {
 	return s.getInt("trafficDiff")
 }
 
+func (s *SettingService) GetXrayRebootTime() (int, error) {
+	return s.getInt("xrayCronJob")
+}
+
+func (s *SettingService) SetXrayRebootTime(time int) error {
+	return s.setInt("xrayCronJob", time)
+}
+
 func (s *SettingService) GetSessionMaxAge() (int, error) {
 	return s.getInt("sessionMaxAge")
 }
@@ -539,6 +548,7 @@ func (s *SettingService) GetDefaultSettings(host string) (interface{}, error) {
 	settings := map[string]settingFunc{
 		"expireDiff":    func() (interface{}, error) { return s.GetExpireDiff() },
 		"trafficDiff":   func() (interface{}, error) { return s.GetTrafficDiff() },
+		"xrayCronJob":   func() (interface{}, error) { return s.GetXrayRebootTime() },
 		"pageSize":      func() (interface{}, error) { return s.GetPageSize() },
 		"defaultCert":   func() (interface{}, error) { return s.GetCertFile() },
 		"defaultKey":    func() (interface{}, error) { return s.GetKeyFile() },

@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"embed"
+	"fmt"
 	"html/template"
 	"io"
 	"io/fs"
@@ -259,6 +260,14 @@ func (s *Server) startTask() {
 		// Statistics every 10 seconds, start the delay for 5 seconds for the first time, and staggered with the time to restart xray
 		s.cron.AddJob("@every 10s", job.NewXrayTrafficJob())
 	}()
+
+	// check and restart core as user defined hour
+	xRayCronJob,err := s.settingService.GetXrayRebootTime()
+	if(err==nil && xRayCronJob !=0){
+		s.cron.AddJob(fmt.Sprintf("@every %dh", xRayCronJob), job.NewXrayRebootJob())
+	}else {
+		logger.Debug("Automatic xray restart disabled")
+	}
 
 	// check client ips from log file every 10 sec
 	s.cron.AddJob("@every 10s", job.NewCheckClientIpJob())
