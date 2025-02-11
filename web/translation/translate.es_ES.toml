@@ -320,7 +320,8 @@
 "muxSett" = "Configuración Mux"
 "direct" = "Conexión Directa"
 "directDesc" = "Establece conexiones directas con dominios o rangos de IP de un país específico."
-
+"xrayCronJob" = "Intervalos de reinicio de Xray-Core"
+"xrayCronJobDesc" = "Intervalos de reinicio automático de Xray-Core. (unidad: hora | 0 = deshabilitar)"
 
 [pages.xray]
 "title" = "Xray Configuración"
