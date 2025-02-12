@@ -17,7 +17,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"x-ui/config"
@@ -36,7 +35,6 @@ import (
 )
 
 var (
-	checkedOnce   sync.Once // Ensures check runs only once
 	isOutdated    bool
 	latestVersion string
 	checkErr      error
@@ -246,11 +244,6 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		status.AppStats.Uptime = 0
 	}
 
-	isOutdated, latestVersion, err := s.CheckForUpdate("AghayeCoder", "tx-ui", config.GetVersion())
-	if err != nil {
-		logger.Error("Error checking for update: ", err)
-	}
-
 	if isOutdated {
 		status.AppStats.TXUpdate = latestVersion
 		status.AppStats.PanelVersion = config.GetVersion()
@@ -258,7 +251,6 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		status.AppStats.PanelVersion = config.GetVersion()
 		status.AppStats.TXUpdate = latestVersion
 	}
-
 	return status
 }
 
@@ -268,26 +260,23 @@ func normalizeVersion(tag string) string {
 }
 
 func (s *ServerService) CheckForUpdate(owner, repo, currentVersion string) (bool, string, error) {
-	checkedOnce.Do(func() { // Ensures this block runs only once
-		g := &latest.GithubTag{
-			Owner:      owner,
-			Repository: repo,
-		}
+	g := &latest.GithubTag{
+		Owner:      owner,
+		Repository: repo,
+	}
 
-		res, err := latest.Check(g, currentVersion)
-		if err != nil {
-			checkErr = err
-			return
-		}
+	res, err := latest.Check(g, currentVersion)
+	if err != nil {
+		checkErr = err
+	}
 
-		isOutdated = res.Outdated
-		latestVersion = normalizeVersion(res.Current)
-		if isOutdated {
-			logger.Info("A new version is available: ", latestVersion)
-		} else {
-			logger.Info("You are using the latest version.")
-		}
-	})
+	isOutdated = res.Outdated
+	latestVersion = normalizeVersion(res.Current)
+	if isOutdated {
+		logger.Info("A new version is available: ", latestVersion)
+	} else {
+		logger.Info("You are using the latest version.")
+	}
 
 	return isOutdated, latestVersion, checkErr
 }
