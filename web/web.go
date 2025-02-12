@@ -275,6 +275,9 @@ func (s *Server) startTask() {
 	// check client ips from log file every day
 	s.cron.AddJob("@daily", job.NewClearLogsJob())
 
+	// check for panel new version every 8h
+	s.cron.AddJob("@every 8h", job.NewUpdateCheckerJob())
+
 	// Make a traffic condition every day, 8:30
 	var entry cron.EntryID
 	isTgbotenabled, err := s.settingService.GetTgbotEnabled()
