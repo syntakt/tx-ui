@@ -48,6 +48,8 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 
 	engine := gin.Default()
 
+	engine.LoadHTMLGlob("sub/html/*")
+
 	subDomain, err := s.settingService.GetSubDomain()
 	if err != nil {
 		return nil, err
