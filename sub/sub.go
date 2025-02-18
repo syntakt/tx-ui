@@ -3,9 +3,13 @@ package sub
 import (
 	"context"
 	"crypto/tls"
+	"embed"
+	"html/template"
 	"io"
+	"io/fs"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 
 	"x-ui/config"
@@ -17,6 +21,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+var htmlFS embed.FS
 
 type Server struct {
 	httpServer *http.Server
@@ -37,6 +43,48 @@ func NewServer() *Server {
 	}
 }
 
+func (s *Server) getHtmlFiles() ([]string, error) {
+	files := make([]string, 0)
+	dir, _ := os.Getwd()
+	err := fs.WalkDir(os.DirFS(dir), "sub/html", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+		files = append(files, path)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
+func (s *Server) getHtmlTemplate(funcMap template.FuncMap) (*template.Template, error) {
+	t := template.New("").Funcs(funcMap)
+	err := fs.WalkDir(htmlFS, "html", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() {
+			newT, err := t.ParseFS(htmlFS, path+"/*.html")
+			if err != nil {
+				// ignore
+				return nil
+			}
+			t = newT
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return t, nil
+}
+
 func (s *Server) initRouter() (*gin.Engine, error) {
 	if config.IsDebug() {
 		gin.SetMode(gin.DebugMode)
@@ -48,7 +96,21 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 
 	engine := gin.Default()
 
-	engine.LoadHTMLGlob("sub/html/*")
+	if config.IsDebug() {
+		// for development
+		files, err := s.getHtmlFiles()
+		if err != nil {
+			return nil, err
+		}
+		engine.LoadHTMLFiles(files...)
+	} else {
+		// for production
+		template, err := s.getHtmlTemplate(engine.FuncMap)
+		if err != nil {
+			return nil, err
+		}
+		engine.SetHTMLTemplate(template)
+	}
 
 	subDomain, err := s.settingService.GetSubDomain()
 	if err != nil {
