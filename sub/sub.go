@@ -11,9 +11,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
-	"time"
-
 	"x-ui/config"
 	"x-ui/logger"
 	"x-ui/util/common"
@@ -25,49 +22,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//go:embed assets/*
-var assetsFS embed.FS
-
 //go:embed html/*
 var htmlFS embed.FS
-
-var startTime = time.Now()
-
-type wrapAssetsFS struct {
-	embed.FS
-}
-
-func (f *wrapAssetsFS) Open(name string) (fs.File, error) {
-	file, err := f.FS.Open("assets/" + name)
-	if err != nil {
-		return nil, err
-	}
-	return &wrapAssetsFile{
-		File: file,
-	}, nil
-}
-
-type wrapAssetsFile struct {
-	fs.File
-}
-
-func (f *wrapAssetsFile) Stat() (fs.FileInfo, error) {
-	info, err := f.File.Stat()
-	if err != nil {
-		return nil, err
-	}
-	return &wrapAssetsFileInfo{
-		FileInfo: info,
-	}, nil
-}
-
-type wrapAssetsFileInfo struct {
-	fs.FileInfo
-}
-
-func (f *wrapAssetsFileInfo) ModTime() time.Time {
-	return startTime
-}
 
 type Server struct {
 	httpServer *http.Server
@@ -146,16 +102,9 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 		return nil, err
 	}
 	engine.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedPaths([]string{basePath + "panel/API/"})))
-	assetsBasePath := basePath + "assets/"
 
 	engine.Use(func(c *gin.Context) {
 		c.Set("base_path", basePath)
-	})
-	engine.Use(func(c *gin.Context) {
-		uri := c.Request.RequestURI
-		if strings.HasPrefix(uri, assetsBasePath) {
-			c.Header("Cache-Control", "max-age=31536000")
-		}
 	})
 
 	// set static files and template
@@ -166,7 +115,6 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 			return nil, err
 		}
 		engine.LoadHTMLFiles(files...)
-		engine.StaticFS(basePath+"assets", http.FS(os.DirFS("sub/assets")))
 	} else {
 		// for production
 		template, err := s.getHtmlTemplate(engine.FuncMap)
@@ -174,7 +122,6 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 			return nil, err
 		}
 		engine.SetHTMLTemplate(template)
-		engine.StaticFS(basePath+"assets", http.FS(&wrapAssetsFS{FS: assetsFS}))
 	}
 
 	subDomain, err := s.settingService.GetSubDomain()
