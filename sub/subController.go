@@ -98,16 +98,19 @@ func (a *SUBController) subs(c *gin.Context) {
 		currentURL := c.Request.URL.Scheme + "://" + c.Request.Host + c.Request.RequestURI
 
 		if strings.Contains(acceptHeader, "text/html") {
-
-			c.HTML(200, "index.html", gin.H{
-				"result":   resultSlice,
-				"total":    totalValue,
-				"expire":   expireValue,
-				"upload":   upValue,
-				"download": downValue,
-				"sId":      subId,
-				"subUrl":   currentURL,
-			})
+			if a.subEncrypt {
+				c.String(200, base64.StdEncoding.EncodeToString([]byte(result)))
+			} else {
+				c.HTML(200, "sub.html", gin.H{
+					"result":   resultSlice,
+					"total":    totalValue,
+					"expire":   expireValue,
+					"upload":   upValue,
+					"download": downValue,
+					"sId":      subId,
+					"subUrl":   currentURL,
+				})
+			}
 		} else {
 			if a.subEncrypt {
 				c.String(200, base64.StdEncoding.EncodeToString([]byte(result)))
