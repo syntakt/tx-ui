@@ -95,7 +95,7 @@ func (a *SUBController) subs(c *gin.Context) {
 		downValue := formatBytes(headerMap["download"], 2)
 		totalValue := formatBytes(headerMap["total"], 2)
 
-		currentURL := c.Request.URL.Scheme + "://" + c.Request.Host + c.Request.RequestURI
+		currentURL := "https://" + c.Request.Host + c.Request.RequestURI
 
 		if strings.Contains(acceptHeader, "text/html") {
 			if a.subEncrypt {
