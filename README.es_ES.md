@@ -461,6 +461,7 @@ Ingresa el ID de chat de usuario en el campo de entrada número 4. Las cuentas d
 | `POST` | `"/resetAllClientTraffics/:id"`    | Restablecer tráfico de todos los clientes en una Entrada  |
 | `POST` | `"/delDepletedClients/:id"`        | Eliminar clientes agotados de la entrada (-1: todos)      |
 | `POST` | `"/onlines"`                       | Obtener usuarios en línea (lista de correos electrónicos) |
+| `POST` | `"/depleted"`                      | Obtener usuarios agotados (lista de correos electrónicos) |
 
 \*- El campo `clientId` debe llenarse por:
 

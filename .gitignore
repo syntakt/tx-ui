@@ -8,6 +8,7 @@ access.log
 error.log
 tmp
 main
+main.exe
 backup/
 bin/
 dist/

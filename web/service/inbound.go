@@ -1729,6 +1729,31 @@ func (s *InboundService) DelDepletedClients(id int) (err error) {
 	return nil
 }
 
+func (s *InboundService) GetDepletedClients() ([]string, error) {
+	db := database.GetDB()
+	tx := db.Begin()
+	defer func() {
+		if err := recover(); err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	var depletedClients []xray.ClientTraffic
+	err := db.Model(xray.ClientTraffic{}).Where("reset = 0 and enable = ?", false).Select("inbound_id, GROUP_CONCAT(email) as email").Group("inbound_id").Find(&depletedClients).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var emails []string
+	for _, depletedClient := range depletedClients {
+		emails = append(emails, strings.Split(depletedClient.Email, ",")...)
+	}
+
+	return emails, nil
+}
+
 func (s *InboundService) GetClientTrafficTgBot(tgId int64) ([]*xray.ClientTraffic, error) {
 	db := database.GetDB()
 	var inbounds []*model.Inbound
