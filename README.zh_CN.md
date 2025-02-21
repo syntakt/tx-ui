@@ -491,6 +491,7 @@ Web 面板通过 Telegram Bot 支持每日流量、面板登录、数据库备�
 | `POST` | `"/resetAllClientTraffics/:id"`    | 重置入站中所有客户端的流量        |
 | `POST` | `"/delDepletedClients/:id"`        | 删除入站耗尽的客户端 （-1： all） |
 | `POST` | `"/onlines"`                       | 获取在线用户 （ 电子邮件列表 ）   |
+| `POST` | `"/depleted"`                      | 获取耗尽的用户（电子邮件列表）    |
 
 \*- `clientId` 项应该使用下列数据
 
