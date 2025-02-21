@@ -41,6 +41,7 @@ func (a *InboundController) initRouter(g *gin.RouterGroup) {
 	g.POST("/delDepletedClients/:id", a.delDepletedClients)
 	g.POST("/import", a.importInbound)
 	g.POST("/onlines", a.onlines)
+	g.POST("/depleted", a.depleted)
 }
 
 func (a *InboundController) getInbounds(c *gin.Context) {
@@ -326,4 +327,13 @@ func (a *InboundController) delDepletedClients(c *gin.Context) {
 
 func (a *InboundController) onlines(c *gin.Context) {
 	jsonObj(c, a.inboundService.GetOnlineClients(), nil)
+}
+
+func (a *InboundController) depleted(c *gin.Context) {
+	depletedClients, err := a.inboundService.GetDepletedClients()
+	if err != nil {
+		jsonMsg(c, "Error getting depleted clients", err)
+		return
+	}
+	jsonObj(c, depletedClients, nil)
 }
