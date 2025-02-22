@@ -535,6 +535,10 @@ XUI_BIN_FOLDER="bin" XUI_DB_FOLDER="/etc/x-ui" go build main.go
 
 </details>
 
+## Thanks To
+- [@Incognito-Coder](https://github.com/incognito-coder) for his contribution in this project
+- special thanks to all contributors
+
 ## Acknowledgment
 
 - [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (License: **GPL-3.0**): _Enhanced v2ray/xray and
