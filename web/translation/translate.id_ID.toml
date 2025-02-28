@@ -446,6 +446,19 @@
 "ipPool" = "Subnet Kumpulan IP"
 "poolSize" = "Ukuran Kolam"
 
+[pages.xray.tunnel]
+"enable" = "Aktifkan Terowongan"
+"enableDesc" = "Aktifkan terowongan 6TO4"
+"ip" = "Alamat IP Terowongan"
+"serverIp" = "Nama host server atau alamat IP tanpa http/https"
+"user" = "Nama Pengguna"
+"serverUser" = "Nama pengguna untuk masuk ke server"
+"password" = "Kata Sandi"
+"serverPass" = "Kata sandi untuk masuk ke server"
+"apply" = "Terapkan"
+"applied" = "Pengaturan Terowongan"
+"notfilled" = "Harap isi semua kolom dan coba lagi"
+
 [pages.settings.security]
 "admin" = "Admin"
 "secret" = "Token Rahasia"

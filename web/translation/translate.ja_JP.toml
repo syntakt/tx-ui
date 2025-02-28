@@ -446,6 +446,19 @@
 "ipPool" = "IPプールサブネット"
 "poolSize" = "プールサイズ"
 
+[pages.xray.tunnel]
+"enable" = "トンネルを有効にする"
+"enableDesc" = "6TO4トンネルを有効にする"
+"ip" = "トンネルのIPアドレス"
+"serverIp" = "サーバーホスト名またはhttp/httpsなしのIPアドレス"
+"user" = "ユーザー名"
+"serverUser" = "サーバーにログインするユーザー名"
+"password" = "パスワード"
+"serverPass" = "サーバーにログインするパスワード"
+"apply" = "適用"
+"applied" = "トンネル設定"
+"notfilled" = "すべての項目を入力し、もう一度お試しください"
+
 [pages.settings.security]
 "admin" = "管理者"
 "secret" = "セキュリティトークン"

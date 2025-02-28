@@ -446,6 +446,19 @@
 "ipPool" = "Mạng con nhóm IP"
 "poolSize" = "Kích thước bể bơi"
 
+[pages.xray.tunnel]
+"enable" = "Bật đường hầm"
+"enableDesc" = "Bật đường hầm 6TO4"
+"ip" = "Địa chỉ IP của đường hầm"
+"serverIp" = "Tên máy chủ hoặc địa chỉ IP mà không có http/https"
+"user" = "Tên đăng nhập"
+"serverUser" = "Tên đăng nhập để vào máy chủ"
+"password" = "Mật khẩu"
+"serverPass" = "Mật khẩu để vào máy chủ"
+"apply" = "Áp dụng"
+"applied" = "Cài đặt đường hầm"
+"notfilled" = "Vui lòng điền đầy đủ thông tin và thử lại"
+
 [pages.settings.security]
 "admin" = "Quản trị viên"
 "secret" = "Mã thông báo bí mật"

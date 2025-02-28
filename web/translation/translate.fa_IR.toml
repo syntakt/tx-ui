@@ -447,6 +447,19 @@
 "poolSize" = "اندازه استخر"
 
 [pages.xray.tunnel]
+"enable" = "فعال کردن تونل"
+"enableDesc" = "فعال کردن تونل 6TO4"
+"ip" = "آدرس IP تونل"
+"serverIp" = "نام میزبان سرور یا آدرس IP بدون http/https"
+"user" = "نام کاربری"
+"serverUser" = "نام کاربری برای ورود به سرور"
+"password" = "رمز عبور"
+"serverPass" = "رمز عبور برای ورود به سرور"
+"apply" = "اعمال"
+"applied" = "تنظیمات تونل"
+"notfilled" = "لطفاً همه فیلدها را پر کنید و دوباره تلاش کنید"
+
+[pages.xray.tunnel]
 "enable" = "فعال کردن تانل"
 "enableDesc" = "فعالسازی تانل از نوع لوکال"
 "ip" = "آدرس IP"
