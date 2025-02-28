@@ -320,8 +320,7 @@ func (s *ServerService) GetXrayVersions() ([]string, error) {
 			continue
 		}
 
-		if (major == 1 && minor == 8 && patch == 24) ||
-			(major >= 25) {
+		if (major >= 25 && minor >= 2 && patch >= 18) || (major >= 26) {
 			versions = append(versions, release.TagName)
 		}
 	}
@@ -536,7 +535,7 @@ func (s *ServerService) ApplyTunnel(ip string, username string, password string)
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 
-	client, err := ssh.Dial("tcp", ip + ":22", config)
+	client, err := ssh.Dial("tcp", ip+":22", config)
 	if err != nil {
 		logger.Errorf("Failed to dial: %s", err)
 	}
@@ -547,7 +546,7 @@ func (s *ServerService) ApplyTunnel(ip string, username string, password string)
 		logger.Errorf("Failed to create session: %s", err)
 	}
 	defer session.Close()
-	session.CombinedOutput("wget https://raw.githubusercontent.com/AghayeCoder/6to4/master/receiver.py && python3 receiver.py "+getPublicIP("8.8.8.8:80"))
+	session.CombinedOutput("wget https://raw.githubusercontent.com/AghayeCoder/6to4/master/receiver.py && python3 receiver.py " + getPublicIP("8.8.8.8:80"))
 }
 
 func (s *ServerService) GetLogs(count string, level string, syslog string) []string {
