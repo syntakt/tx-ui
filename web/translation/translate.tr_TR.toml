@@ -446,6 +446,19 @@
 "ipPool" = "IP Havuzu Alt Ağı"
 "poolSize" = "Havuz Boyutu"
 
+[pages.xray.tunnel]
+"enable" = "Tüneli Etkinleştir"
+"enableDesc" = "6TO4 tünelini etkinleştir"
+"ip" = "Tünel IP adresi"
+"serverIp" = "Sunucu ana bilgisayar adı veya http/https olmadan IP adresi"
+"user" = "Kullanıcı Adı"
+"serverUser" = "Sunucuya giriş için kullanıcı adı"
+"password" = "Şifre"
+"serverPass" = "Sunucuya giriş için şifre"
+"apply" = "Uygula"
+"applied" = "Tünel Ayarları"
+"notfilled" = "Lütfen tüm alanları doldurun ve tekrar deneyin"
+
 [pages.settings.security]
 "admin" = "Yönetici"
 "secret" = "Gizli Anahtar"

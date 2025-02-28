@@ -446,6 +446,19 @@
 "ipPool" = "IP 池子網"
 "poolSize" = "池大小"
 
+[pages.xray.tunnel]
+"enable" = "啟用隧道"
+"enableDesc" = "啟用6TO4隧道"
+"ip" = "隧道IP地址"
+"serverIp" = "伺服器主機名稱或IP地址（不包含http/https）"
+"user" = "使用者名稱"
+"serverUser" = "伺服器登入使用者名稱"
+"password" = "密碼"
+"serverPass" = "伺服器登入密碼"
+"apply" = "套用"
+"applied" = "隧道設定"
+"notfilled" = "請填寫所有欄位後重試"
+
 [pages.settings.security]
 "admin" = "管理員"
 "secret" = "安全令牌"

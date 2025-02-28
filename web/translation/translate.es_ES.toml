@@ -446,6 +446,19 @@
 "ipPool" = "Subred del grupo de IP"
 "poolSize" = "Tamaño del grupo"
 
+[pages.xray.tunnel]
+"enable" = "Habilitar túnel"
+"enableDesc" = "Habilitar túnel 6TO4"
+"ip" = "Dirección IP del túnel"
+"serverIp" = "Nombre del host del servidor o dirección IP sin http/https"
+"user" = "Usuario"
+"serverUser" = "Usuario para iniciar sesión en el servidor"
+"password" = "Contraseña"
+"serverPass" = "Contraseña para iniciar sesión en el servidor"
+"apply" = "Aplicar"
+"applied" = "Configuraciones del túnel"
+"notfilled" = "Por favor, complete todos los campos e inténtelo de nuevo"
+
 [pages.settings.security]
 "admin" = "Administrador"
 "secret" = "Token Secreto"
