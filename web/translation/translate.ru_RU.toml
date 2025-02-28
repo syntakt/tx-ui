@@ -446,6 +446,19 @@
 "ipPool" = "Подсеть пула IP"
 "poolSize" = "Размер пула"
 
+[pages.xray.tunnel]
+"enable" = "Включить туннель"
+"enableDesc" = "Включить 6TO4 туннель"
+"ip" = "IP-адрес туннеля"
+"serverIp" = "Имя хост-сервера или ip-адрес без указания http/https"
+"user" = "Логин"
+"serverUser" = "Логин для входа на сервер"
+"password" = "Пароль"
+"serverPass" = "Пароль для входа на сервер"
+"apply" = "Применить"
+"applied" = "Настройки туннеля"
+"notfilled" = "Пожалуйста, заполните все поля и повторите попытку снова"
+
 [pages.settings.security]
 "admin" = "Админ"
 "secret" = "Секретный токен"
