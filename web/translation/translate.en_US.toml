@@ -446,6 +446,19 @@
 "ipPool" = "IP Pool Subnet"
 "poolSize" = "Pool Size"
 
+[pages.xray.tunnel]
+"enable" = "Enable Tunnel"
+"enableDesc" = "Enable 6TO4 Tunnel"
+"ip" = "IP Address"
+"serverIp" = "Server hostname or ip address without http/https"
+"user" = "Username"
+"serverUser" = "Server login user"
+"password" = "Password"
+"serverPass" = "Server login password"
+"apply" = "Apply"
+"applied" = "Setting Tunnel"
+"notfilled" = "Please fill all inputs and try again"
+
 [pages.settings.security]
 "admin" = "Admin"
 "secret" = "Secret Token"

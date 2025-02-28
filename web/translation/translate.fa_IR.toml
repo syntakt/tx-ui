@@ -446,6 +446,19 @@
 "ipPool" = "زیرشبکه استخر آی‌پی"
 "poolSize" = "اندازه استخر"
 
+[pages.xray.tunnel]
+"enable" = "فعال کردن تانل"
+"enableDesc" = "فعالسازی تانل از نوع لوکال"
+"ip" = "آدرس IP"
+"serverIp" = "نام میزبان یا آیپی بدون پروتکل"
+"user" = "نام کاربری"
+"serverUser" = "کاربر ورود به سرور"
+"password" = "رمز عبور"
+"serverPass" = "رمز ورود به سرور"
+"apply" = "اعمال"
+"applied" = "تنظیم تانل"
+"notfilled" = "لطفاً همه ورودی ها را پر کنید و دوباره امتحان کنید"
+
 [pages.settings.security]
 "admin" = "مدیر"
 "secret" = "توکن مخفی"
