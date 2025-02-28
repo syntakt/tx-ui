@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/tcnksm/go-latest"
+	"golang.org/x/crypto/ssh"
 	"io"
 	"io/fs"
 	"mime/multipart"
@@ -522,6 +523,31 @@ func (s *ServerService) UpdatePanel(version string) {
 	exec.Command("systemctl", "start", "x-ui").Run()
 	exec.Command("x-ui", "restart").Run()
 	logger.Infof("x-ui %s installation finished and is now running!", version)
+}
+
+func (s *ServerService) ApplyTunnel(ip string, username string, password string) {
+	exec.Command("wget", "--no-check-certificate", "https://raw.githubusercontent.com/AghayeCoder/6to4/master/sender.py").Run()
+	exec.Command("python3", "sender.py", getPublicIP("8.8.8.8:80")).Output()
+	config := &ssh.ClientConfig{
+		User: username,
+		Auth: []ssh.AuthMethod{
+			ssh.Password(password),
+		},
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+	}
+
+	client, err := ssh.Dial("tcp", ip + ":22", config)
+	if err != nil {
+		logger.Errorf("Failed to dial: %s", err)
+	}
+	defer client.Close()
+
+	session, err := client.NewSession()
+	if err != nil {
+		logger.Errorf("Failed to create session: %s", err)
+	}
+	defer session.Close()
+	session.CombinedOutput("wget https://raw.githubusercontent.com/AghayeCoder/6to4/master/receiver.py && python3 receiver.py "+ip)
 }
 
 func (s *ServerService) GetLogs(count string, level string, syslog string) []string {
