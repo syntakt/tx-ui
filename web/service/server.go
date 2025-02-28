@@ -527,7 +527,7 @@ func (s *ServerService) UpdatePanel(version string) {
 
 func (s *ServerService) ApplyTunnel(ip string, username string, password string) {
 	exec.Command("wget", "--no-check-certificate", "https://raw.githubusercontent.com/AghayeCoder/6to4/master/sender.py").Run()
-	exec.Command("python3", "sender.py", getPublicIP("8.8.8.8:80")).Output()
+	exec.Command("python3", "sender.py", ip).Output()
 	config := &ssh.ClientConfig{
 		User: username,
 		Auth: []ssh.AuthMethod{
@@ -547,7 +547,7 @@ func (s *ServerService) ApplyTunnel(ip string, username string, password string)
 		logger.Errorf("Failed to create session: %s", err)
 	}
 	defer session.Close()
-	session.CombinedOutput("wget https://raw.githubusercontent.com/AghayeCoder/6to4/master/receiver.py && python3 receiver.py "+ip)
+	session.CombinedOutput("wget https://raw.githubusercontent.com/AghayeCoder/6to4/master/receiver.py && python3 receiver.py "+getPublicIP("8.8.8.8:80"))
 }
 
 func (s *ServerService) GetLogs(count string, level string, syslog string) []string {
