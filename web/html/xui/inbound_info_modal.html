@@ -193,7 +193,7 @@
             </a-tooltip>
           </td>
         </tr>
-        <tr v-if="app.ipLimitEnable">
+        <tr v-if="app.ipLimitEnable && infoModal.clientSettings && infoModal.clientSettings.limitIp">
           <td>{{ i18n "pages.inbounds.IPLimit" }}</td>
           <td>
             <a-tag>[[ infoModal.clientSettings.limitIp ]]</a-tag>
@@ -233,7 +233,7 @@
           </td>
           <td>
             <template v-if="infoModal.clientSettings.expiryTime > 0">
-              <a-tag :color="usageColor(new Date().getTime(), app.expireDiff, infoModal.clientSettings.expiryTime)"> 
+              <a-tag :color="usageColor(new Date().getTime(), app.expireDiff, infoModal.clientSettings.expiryTime)">
                 <template v-if="app.datepicker === 'gregorian'">
                   [[ DateUtil.formatMillis(infoModal.clientSettings.expiryTime) ]]
                 </template>
@@ -434,7 +434,7 @@
                     <a-button style="min-width: 24px;" size="small" icon="snippets" :id="'copy-url-link-'+index" @click="copyToClipboard('copy-url-link-'+index, infoModal.links[index])"></a-button>
                   </a-tooltip>
                 </tr-info-title>
-                <div v-html="infoModal.links[index].replaceAll(`\n`,`<br />`)" style="border-radius: 1rem; padding: 0.5rem;" class="client-table-odd-row">
+                <div v-if="infoModal.links[index]" v-html="infoModal.links[index].replaceAll(`\n`,`<br />`)" style="border-radius: 1rem; padding: 0.5rem;" class="client-table-odd-row">
                 </div>
               </tr-info-row>
             </td>
@@ -479,13 +479,14 @@
       this.isExpired = this.inbound.clients ? this.inbound.isExpiry(index) : this.dbInbound.isExpiry;
       this.clientStats = this.inbound.clients ? this.dbInbound.clientStats.find(row => row.email === this.clientSettings.email) : [];
 
-      if (app.ipLimitEnable && this.clientSettings.limitIp) {
+      if (app.ipLimitEnable && this.clientSettings) {
+        this.clientSettings.limitIp = this.clientSettings.limitIp || '';
         refreshIPs(this.clientStats.email).then((ips) => {
           this.clientIps = ips;
-        })
+        });
       }
       if (this.inbound.protocol == Protocols.WIREGUARD) {
-        this.links = this.inbound.genInboundLinks(dbInbound.remark).split('\r\n')
+        this.links = this.inbound.genInboundLinks(dbInbound.remark).split('\r\n');
       } else {
         this.links = this.inbound.genAllLinks(this.dbInbound.remark, app.remarkModel, this.clientSettings);
       }
@@ -507,6 +508,7 @@
       return app.subSettings.subJsonURI + subID;
     }
   };
+
   const infoModalApp = new Vue({
     delimiters: ['[[', ']]'],
     el: '#inbound-info-modal',
@@ -538,7 +540,7 @@
           text: () => content,
         });
         this.infoModal.clipboard.on('success', () => {
-          app.$message.success('{{ i18n "copied" }}')
+          app.$message.success('{{ i18n "copied" }}');
           this.infoModal.clipboard.destroy();
         });
       },
@@ -552,22 +554,22 @@
       refreshIPs() {
         this.refreshing = true;
         refreshIPs(this.infoModal.clientStats.email)
-          .then((ips) => {
-            this.infoModal.clientIps = ips;
-          })
-          .finally(() => {
-            this.refreshing = false;
-          });
+                .then((ips) => {
+                  this.infoModal.clientIps = ips;
+                })
+                .finally(() => {
+                  this.refreshing = false;
+                });
       },
       clearClientIps() {
         HttpUtil.post(`/panel/inbound/clearClientIps/${this.infoModal.clientStats.email}`)
-          .then((msg) => {
-            if (!msg.success) {
-              return;
-            }
-            this.infoModal.clientIps = 'No IP Record';
-          })
-          .catch(() => {});
+                .then((msg) => {
+                  if (!msg.success) {
+                    return;
+                  }
+                  this.infoModal.clientIps = 'No IP Record';
+                })
+                .catch(() => {});
       },
     },
   });
