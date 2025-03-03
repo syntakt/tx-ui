@@ -477,6 +477,11 @@
         <a-form-item label="Penetrate">
           <a-switch v-model="outbound.stream.sockopt.penetrate"></a-switch>
         </a-form-item>
+        <a-form-item label="Address Port Strtaegy">
+            <a-select v-model="outbound.stream.sockopt.addressPortStrategy" style="width: 60%" :dropdown-class-name="themeSwitcher.currentTheme">
+              <a-select-option v-for="key in ADDRESS_PORT_STRATEGY" :value="key">[[ key ]]</a-select-option>
+            </a-select>
+        </a-form-item>
       </template>
 
       <!-- mux settings -->

@@ -86,6 +86,16 @@ const MODE_OPTION = {
     STREAM_ONE: "stream-one",
 };
 
+const ADDRESS_PORT_STRATEGY = {
+  NONE: "none",
+  SRV_PORT_ONLY: "srvportonly",
+  SRV_ADDRESS_ONLY: "srvaddressonly",
+  SRV_PORT_AND_ADDRESS: "srvportandaddress",
+  TXT_PORT_ONLY: "txtportonly",
+  TXT_ADDRESS_ONLY: "txtaddressonly",
+  TXT_PORT_AND_ADDRESS: "txtportandaddress",
+};
+
 Object.freeze(Protocols);
 Object.freeze(SSMethods);
 Object.freeze(TLS_FLOW_CONTROL);
@@ -95,6 +105,7 @@ Object.freeze(OutboundDomainStrategies);
 Object.freeze(WireguardDomainStrategy);
 Object.freeze(USERS_SECURITY);
 Object.freeze(MODE_OPTION);
+Object.freeze(ADDRESS_PORT_STRATEGY)
 
 
 class CommonClass {
@@ -412,7 +423,8 @@ class SockoptStreamSettings extends CommonClass {
         tcpFastOpen = false,
         tcpKeepAliveInterval = 0,
         tcpMptcp = false,
-        penetrate = false
+        penetrate = false,
+        addressPortStrategy = ADDRESS_PORT_STRATEGY.NONE,
     ) {
         super();
         this.dialerProxy = dialerProxy;
@@ -420,6 +432,7 @@ class SockoptStreamSettings extends CommonClass {
         this.tcpKeepAliveInterval = tcpKeepAliveInterval;
         this.tcpMptcp = tcpMptcp;
         this.penetrate = penetrate;
+        this.addressPortStrategy = addressPortStrategy;
     }
 
     static fromJson(json = {}) {
