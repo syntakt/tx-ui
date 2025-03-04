@@ -186,10 +186,8 @@ config_after_install() {
             # check if there already exists a certificate
             local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
             if [ "${currentCert}" == "${domain}" ]; then
-                local certInfo=$(~/.acme.sh/acme.sh --list)
-                LOGE "System already has certificates for this domain. Cannot issue again. Current certificate details:"
-                LOGI "$certInfo"
-                exit 1
+                LOGI "System already has certificates for this domain. trying to remove"
+                rm -rf ~/.acme.sh/${currentCert}*
             else
                 LOGI "Your domain is ready for issuing certificates now..."
             fi
