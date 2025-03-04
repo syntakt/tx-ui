@@ -227,7 +227,7 @@ location /sub {
 
 ## 建议使用的操作系统
 
-- Ubuntu 20.04+
+- Ubuntu 22.04+
 - Debian 11+
 - CentOS 8+
 - OpenEuler 22.03+

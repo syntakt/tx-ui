@@ -230,7 +230,7 @@ location /sub {
 
 ## Рекомендуемые ОС
 
-- Ubuntu 20.04+
+- Ubuntu 22.04+
 - Debian 11+
 - CentOS 8+
 - OpenEuler 22.03+
