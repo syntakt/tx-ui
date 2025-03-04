@@ -169,7 +169,7 @@ systemctl restart x-ui
       --network=host \
       --restart=unless-stopped \
       --name tx-ui \
-      ghcr.io/AghayeCoder/tx-ui:latest
+      ghcr.io/aghayecoder/tx-ui:latest
    ```
 
 4. **Обновление до последней версии:**

@@ -173,7 +173,7 @@ See https://docs.docker.com/reference/cli/docker/container/run/#pull for more in
       --network=host \
       --restart=unless-stopped \
       --name tx-ui \
-      ghcr.io/AghayeCoder/tx-ui:latest
+      ghcr.io/aghayecoder/tx-ui:latest
    ```
 
 4. **Update to the Latest Version:**
