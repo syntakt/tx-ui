@@ -115,6 +115,7 @@
 "upgrade" = "Обновление"
 "upgradeAvail" = "Доступно новое обновление панели"
 "installingPanel" = "Началась установка панели"
+"systemHost" = "Hostname"
 
 [pages.inbounds]
 "title" = "Подключения"
