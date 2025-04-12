@@ -1,6 +1,3 @@
----
-version: "3"
-
 services:
   tx-ui:
     image: ghcr.io/aghayecoder/tx-ui:latest
