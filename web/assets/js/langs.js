@@ -1,5 +1,10 @@
 const supportLangs = [
 	{
+		name: "العربية",
+		value: "ar-EG",
+		icon: "🇪🇬",
+	},
+	{
 		name: "English",
 		value: "en-US",
 		icon: "🇺🇸",

@@ -270,6 +270,7 @@ location /sub {
 
 ## Языки
 
+- Arabic (арабский)
 - English (английский)  
 - Persian (персидский)  
 - Traditional Chinese (традиционный китайский)  

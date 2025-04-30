@@ -264,6 +264,7 @@ location /sub {
 
 ## Languages
 
+- Arabic (阿拉伯)
 - English（英语）  
 - Persian（波斯语）  
 - Traditional Chinese（繁体中文）  

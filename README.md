@@ -288,6 +288,7 @@ computing environments. The following are key architectures that we support:
 
 ## Languages
 
+- Arabic
 - English
 - Persian
 - Traditional Chinese

@@ -264,6 +264,7 @@ Nuestra plataforma ofrece compatibilidad con una amplia gama de arquitecturas y 
 
 ## Idiomas
 
+- Arabic (Árabe)
 - English (inglés)  
 - Persian (persa)  
 - Traditional Chinese (chino tradicional)  
