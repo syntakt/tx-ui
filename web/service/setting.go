@@ -36,7 +36,7 @@ var defaultValueMap = map[string]string{
 	"pageSize":           "50",
 	"expireDiff":         "0",
 	"trafficDiff":        "0",
-	"xrayCronJob":		  "0",
+	"xrayCronJob":        "0",
 	"remarkModel":        "-ieo",
 	"timeLocation":       "Local",
 	"tgBotEnable":        "false",
@@ -51,6 +51,7 @@ var defaultValueMap = map[string]string{
 	"tgLang":             "en-US",
 	"secretEnable":       "false",
 	"subEnable":          "false",
+	"subTitle":           "",
 	"subListen":          "",
 	"subPort":            "2096",
 	"subPath":            "/sub/",
@@ -426,6 +427,10 @@ func (s *SettingService) GetSubEnable() (bool, error) {
 	return s.getBool("subEnable")
 }
 
+func (s *SettingService) GetSubTitle() (string, error) {
+	return s.getString("subTitle")
+}
+
 func (s *SettingService) GetSubListen() (string, error) {
 	return s.getString("subListen")
 }
@@ -559,6 +564,7 @@ func (s *SettingService) GetDefaultSettings(host string) (interface{}, error) {
 		"defaultKey":    func() (interface{}, error) { return s.GetKeyFile() },
 		"tgBotEnable":   func() (interface{}, error) { return s.GetTgbotEnabled() },
 		"subEnable":     func() (interface{}, error) { return s.GetSubEnable() },
+		"subTitle":      func() (any, error) { return s.GetSubTitle() },
 		"subURI":        func() (interface{}, error) { return s.GetSubURI() },
 		"subJsonURI":    func() (interface{}, error) { return s.GetSubJsonURI() },
 		"remarkModel":   func() (interface{}, error) { return s.GetRemarkModel() },
@@ -578,6 +584,7 @@ func (s *SettingService) GetDefaultSettings(host string) (interface{}, error) {
 
 	if result["subEnable"].(bool) && (result["subURI"].(string) == "" || result["subJsonURI"].(string) == "") {
 		subURI := ""
+		subTitle, _ := s.GetSubTitle()
 		subPort, _ := s.GetSubPort()
 		subPath, _ := s.GetSubPath()
 		subJsonPath, _ := s.GetSubJsonPath()
@@ -603,6 +610,9 @@ func (s *SettingService) GetDefaultSettings(host string) (interface{}, error) {
 		}
 		if result["subURI"].(string) == "" {
 			result["subURI"] = subURI + subPath
+		}
+		if result["subTitle"].(string) == "" {
+			result["subTitle"] = subTitle
 		}
 		if result["subJsonURI"].(string) == "" {
 			result["subJsonURI"] = subURI + subJsonPath

@@ -41,6 +41,7 @@ type AllSetting struct {
 	TimeLocation     string `json:"timeLocation" form:"timeLocation"`
 	SecretEnable     bool   `json:"secretEnable" form:"secretEnable"`
 	SubEnable        bool   `json:"subEnable" form:"subEnable"`
+	SubTitle         string `json:"subTitle" form:"subTitle"`
 	SubListen        string `json:"subListen" form:"subListen"`
 	SubPort          int    `json:"subPort" form:"subPort"`
 	SubPath          string `json:"subPath" form:"subPath"`
@@ -49,7 +50,7 @@ type AllSetting struct {
 	SubKeyFile       string `json:"subKeyFile" form:"subKeyFile"`
 	SubUpdates       int    `json:"subUpdates" form:"subUpdates"`
 	SubEncrypt       bool   `json:"subEncrypt" form:"subEncrypt"`
-	SubCustomUI	     bool   `json:"subCustomUI" form:"subCustomUI"`
+	SubCustomUI      bool   `json:"subCustomUI" form:"subCustomUI"`
 	SubShowInfo      bool   `json:"subShowInfo" form:"subShowInfo"`
 	SubURI           string `json:"subURI" form:"subURI"`
 	SubJsonPath      string `json:"subJsonPath" form:"subJsonPath"`
