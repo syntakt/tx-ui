@@ -1,9 +1,9 @@
 {{define "qrcodeModal"}}
 <a-modal id="qrcode-modal" v-model="qrModal.visible" :title="qrModal.title"
-    :dialog-style="isMobileQr ? { top: '18px' } : {}"
-    :closable="true"
-    :class="themeSwitcher.currentTheme"
-    :footer="null" width="fit-content">
+         :dialog-style="isMobileQr ? { top: '18px' } : {}"
+         :closable="true"
+         :class="themeSwitcher.currentTheme"
+         :footer="null" width="fit-content">
   <tr-qr-modal class="qr-modal">
     <template v-if="app.subSettings.enable && qrModal.subId">
       <tr-qr-box class="qr-box">
@@ -169,9 +169,7 @@
         }
 
         if (row.useIPv4 && this.serverStatus.publicIP.ipv4) {
-          // Replace the hostname or IP in the link with the IPv4 address
           const originalLink = row.originalLink;
-          const url = new URL(originalLink);
           const ipv4 = this.serverStatus.publicIP.ipv4;
 
           if (qrModal.inbound.protocol == Protocols.WIREGUARD) {
@@ -184,8 +182,20 @@
                       `Endpoint = ${ipv4}:${match[2]}`
               );
             }
+          } else if (qrModal.inbound.protocol == Protocols.VMESS) {
+            // Decode VMESS link from Base64
+            const base64Decoded = atob(originalLink.replace('vmess://', ''));
+            const vmessConfig = JSON.parse(base64Decoded);
+
+            // Update the "add" field with the IPv4 address
+            vmessConfig.add = ipv4;
+
+            // Re-encode the updated VMESS config to Base64
+            const updatedBase64 = btoa(JSON.stringify(vmessConfig));
+            row.link = `vmess://${updatedBase64}`;
           } else {
             // For other protocols using URL format
+            const url = new URL(originalLink);
             url.hostname = ipv4;
             row.link = url.toString();
           }
@@ -278,15 +288,15 @@
     elements.forEach((element) => {
       function isElementOverflowing(element) {
         const overflowX = element.offsetWidth < element.scrollWidth,
-          overflowY = element.offsetHeight < element.scrollHeight;
+                overflowY = element.offsetHeight < element.scrollHeight;
         return overflowX || overflowY;
       }
 
       function wrapContentsInMarquee(element) {
         element.classList.add("tr-marquee");
         element.children[0].style.animation = `move-ltr ${
-            (element.children[0].clientWidth / element.clientWidth) * 5
-          }s ease-in-out infinite`;
+                (element.children[0].clientWidth / element.clientWidth) * 5
+        }s ease-in-out infinite`;
         const marqueeText = element.children[0];
         if (element.children.length < 2) {
           for (let i = 0; i < 1; i++) {
