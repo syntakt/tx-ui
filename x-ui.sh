@@ -489,7 +489,7 @@ enable_bbr() {
     ubuntu | debian | armbian)
         apt-get update && apt-get install -yqq --no-install-recommends ca-certificates
         ;;
-    centos | almalinux | rocky | ol)
+    centos | rhel | almalinux | rocky | ol)
         yum -y update && yum -y install ca-certificates
         ;;
     fedora | amzn)
@@ -1011,7 +1011,7 @@ ssl_cert_issue() {
     ubuntu | debian | armbian)
         apt update && apt install socat -y
         ;;
-    centos | almalinux | rocky | ol)
+    centos | rhel | almalinux | rocky | ol)
         yum -y update && yum -y install socat
         ;;
     fedora | amzn)
@@ -1478,7 +1478,7 @@ install_iplimit() {
         debian | armbian)
             apt update && apt install fail2ban -y
             ;;
-        centos | almalinux | rocky | ol)
+        centos | rhel |almalinux | rocky | ol)
             yum update -y && yum install epel-release -y
             yum -y install fail2ban
             ;;
@@ -1559,7 +1559,7 @@ remove_iplimit() {
             apt-get purge -y fail2ban -y
             apt-get autoremove -y
             ;;
-        centos | almalinux | rocky | ol)
+        centos | rhel | almalinux | rocky | ol)
             yum remove fail2ban -y
             yum autoremove -y
             ;;
