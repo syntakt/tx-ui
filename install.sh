@@ -203,17 +203,18 @@ config_after_install() {
                     LOGI "  - Certificate File: $webCertFile"
                     LOGI "  - Private Key File: $webKeyFile"
                     echo -e "${green}Access URL: https://${domain}:${existing_port}${existing_webBasePath}${plain}"
-                    restart
+                    # restart service if needed
                 else
                     LOGE "Error: Certificate or private key file not found for domain: $domain."
                 fi
 
                 read -p "Would you like to customize the Panel Port settings? (If not, a random port will be applied) [y/n]: " config_confirm
+                local config_port
                 if [[ "${config_confirm}" == "y" || "${config_confirm}" == "Y" ]]; then
                     read -p "Please set up the panel port: " config_port
                     echo -e "${yellow}Your Panel Port is: ${config_port}${plain}"
                 else
-                    local config_port=$(shuf -i 1024-62000 -n 1)
+                    config_port=$(shuf -i 1024-62000 -n 1)
                     echo -e "${yellow}Generated random port: ${config_port}${plain}"
                 fi
 
@@ -226,32 +227,32 @@ config_after_install() {
                 echo -e "${green}WebBasePath: ${config_webBasePath}${plain}"
                 echo -e "${green}Access URL: https://${domain}:${config_port}/${config_webBasePath}${plain}"
                 echo -e "###############################################"
-            else
-                local config_webBasePath=$(gen_random_string 15)
-                echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
-                /usr/local/x-ui/x-ui setting -webBasePath "${config_webBasePath}"
-                echo -e "${green}New WebBasePath: ${config_webBasePath}${plain}"
-                echo -e "${green}Access URL: https://${domain}:${existing_port}/${config_webBasePath}${plain}"
             fi
         else
-            if [[ "$existing_hasDefaultCredential" == "true" ]]; then
-                local config_username=$(gen_random_string 10)
-                local config_password=$(gen_random_string 10)
-
-                echo -e "${yellow}Default credentials detected. Security update required...${plain}"
-                /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}"
-                echo -e "Generated new random login credentials:"
-                echo -e "###############################################"
-                echo -e "${green}Username: ${config_username}${plain}"
-                echo -e "${green}Password: ${config_password}${plain}"
-                echo -e "###############################################"
-            else
-                echo -e "${green}Username, Password, and WebBasePath are properly set. Exiting...${plain}"
-            fi
+            local config_webBasePath=$(gen_random_string 15)
+            echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
+            /usr/local/x-ui/x-ui setting -webBasePath "${config_webBasePath}"
+            echo -e "${green}New WebBasePath: ${config_webBasePath}${plain}"
+            echo -e "${green}Access URL: https://${domain}:${existing_port}/${config_webBasePath}${plain}"
         fi
+    else
+        if [[ "$existing_hasDefaultCredential" == "true" ]]; then
+            local config_username=$(gen_random_string 10)
+            local config_password=$(gen_random_string 10)
 
-        /usr/local/x-ui/x-ui migrate
+            echo -e "${yellow}Default credentials detected. Security update required...${plain}"
+            /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}"
+            echo -e "Generated new random login credentials:"
+            echo -e "###############################################"
+            echo -e "${green}Username: ${config_username}${plain}"
+            echo -e "${green}Password: ${config_password}${plain}"
+            echo -e "###############################################"
+        else
+            echo -e "${green}Username, Password, and WebBasePath are properly set. Exiting...${plain}"
+        fi
     fi
+
+    /usr/local/x-ui/x-ui migrate
 }
 
 install_x-ui() {
@@ -304,7 +305,10 @@ install_x-ui() {
         chmod +x bin/xray-linux-arm
     fi
 
-    chmod +x x-ui bin/xray-linux-$(arch)
+    if [[ -f bin/xray-linux-$(arch) ]]; then
+        chmod +x bin/xray-linux-$(arch)
+    fi
+
     cp -f x-ui.service /etc/systemd/system/
     wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/AghayeCoder/tx-ui/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
@@ -339,4 +343,4 @@ install_x-ui() {
 
 echo -e "${green}Running...${plain}"
 install_base
-install_x-ui $1
+install_x-ui "$1"
