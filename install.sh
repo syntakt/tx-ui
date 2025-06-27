@@ -8,7 +8,7 @@ plain='\033[0m'
 
 cur_dir=$(pwd)
 
-#Add some basic function here
+# Add some basic function here
 function LOGD() {
     echo -e "${yellow}[DEG] $* ${plain}"
 }
@@ -22,7 +22,10 @@ function LOGI() {
 }
 
 # check root
-[[ $EUID -ne 0 ]] && echo -e "${red}Fatal error: ${plain} Please run this script with root privilege \n " && exit 1
+if [[ $EUID -ne 0 ]]; then
+    echo -e "${red}Fatal error: ${plain} Please run this script with root privilege \n "
+    exit 1
+fi
 
 # Check OS and set release variable
 if [[ -f /etc/os-release ]]; then
@@ -39,14 +42,14 @@ echo "The OS release is: $release"
 
 arch() {
     case "$(uname -m)" in
-    x86_64 | x64 | amd64) echo 'amd64' ;;
-    i*86 | x86) echo '386' ;;
-    armv8* | armv8 | arm64 | aarch64) echo 'arm64' ;;
-    armv7* | armv7 | arm) echo 'armv7' ;;
-    armv6* | armv6) echo 'armv6' ;;
-    armv5* | armv5) echo 'armv5' ;;
-    s390x) echo 's390x' ;;
-    *) echo -e "${green}Unsupported CPU architecture! ${plain}" && rm -f install.sh && exit 1 ;;
+        x86_64 | x64 | amd64) echo 'amd64' ;;
+        i*86 | x86) echo '386' ;;
+        armv8* | armv8 | arm64 | aarch64) echo 'arm64' ;;
+        armv7* | armv7 | arm) echo 'armv7' ;;
+        armv6* | armv6) echo 'armv6' ;;
+        armv5* | armv5) echo 'armv5' ;;
+        s390x) echo 's390x' ;;
+        *) echo -e "${green}Unsupported CPU architecture! ${plain}" && rm -f install.sh && exit 1 ;;
     esac
 }
 
@@ -54,7 +57,6 @@ echo "arch: $(arch)"
 
 check_glibc_version() {
     glibc_version=$(ldd --version | head -n1 | awk '{print $NF}')
-
     required_version="2.32"
     if [[ "$(printf '%s\n' "$required_version" "$glibc_version" | sort -V | head -n1)" != "$required_version" ]]; then
         echo -e "${red}GLIBC version $glibc_version is too old! Required: 2.32 or higher${plain}"
@@ -67,24 +69,24 @@ check_glibc_version
 
 install_base() {
     case "${release}" in
-    ubuntu | debian | armbian)
-        apt-get update && apt-get install -y -q wget curl tar tzdata socat
-        ;;
-    centos | rhel | almalinux | rocky | ol)
-        yum -y update && yum install -y -q wget curl tar tzdata socat
-        ;;
-    fedora | amzn)
-        dnf -y update && dnf install -y -q wget curl tar tzdata socat
-        ;;
-    arch | manjaro | parch)
-        pacman -Syu && pacman -Syu --noconfirm wget curl tar tzdata socat
-        ;;
-    opensuse-tumbleweed)
-        zypper refresh && zypper -q install -y wget curl tar timezone socat
-        ;;
-    *)
-        apt-get update && apt install -y -q wget curl tar tzdata socat
-        ;;
+        ubuntu | debian | armbian)
+            apt-get update && apt-get install -y -q wget curl tar tzdata socat
+            ;;
+        centos | rhel | almalinux | rocky | ol)
+            yum -y update && yum install -y -q wget curl tar tzdata socat
+            ;;
+        fedora | amzn)
+            dnf -y update && dnf install -y -q wget curl tar tzdata socat
+            ;;
+        arch | manjaro | parch)
+            pacman -Syu && pacman -Syu --noconfirm wget curl tar tzdata socat
+            ;;
+        opensuse-tumbleweed)
+            zypper refresh && zypper -q install -y wget curl tar timezone socat
+            ;;
+        *)
+            apt-get update && apt install -y -q wget curl tar tzdata socat
+            ;;
     esac
 }
 
@@ -121,131 +123,135 @@ config_after_install() {
 
             # get the domain here, and we need to verify it
             local domain=""
-            read -p "Please enter your domain name: " domain
-            LOGD "Your domain is: ${domain}, checking it..."
-
-            # check if there already exists a certificate
-            local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
-            if [ "${currentCert}" == "${domain}" ]; then
-                LOGI "System already has certificates for this domain. trying to remove"
-                rm -rf ~/.acme.sh/${currentCert}*
+            read -p "Please enter your domain name (or press Enter to skip): " domain
+            if [ -z "$domain" ]; then
+                LOGI "No domain entered. Skipping domain and certificate setup."
             else
-                LOGI "Your domain is ready for issuing certificates now..."
-            fi
+                LOGD "Your domain is: ${domain}, checking it..."
 
-            # create a directory for the certificate
-            certPath="/root/cert/${domain}"
-            if [ ! -d "$certPath" ]; then
-                mkdir -p "$certPath"
+                # check if there already exists a certificate
+                local currentCert=$(~/.acme.sh/acme.sh --list | tail -1 | awk '{print $1}')
+                if [ "${currentCert}" == "${domain}" ]; then
+                    LOGI "System already has certificates for this domain. trying to remove"
+                    rm -rf ~/.acme.sh/${currentCert}*
+                else
+                    LOGI "Your domain is ready for issuing certificates now..."
+                fi
+
+                # create a directory for the certificate
+                certPath="/root/cert/${domain}"
+                if [ ! -d "$certPath" ]; then
+                    mkdir -p "$certPath"
+                else
+                    rm -rf "$certPath"
+                    mkdir -p "$certPath"
+                fi
+
+                # get the port number for the standalone server
+                local WebPort=80
+                read -p "Please choose which port to use (default is 80): " WebPort
+                if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
+                    LOGE "Your input ${WebPort} is invalid, will use default port 80."
+                    WebPort=80
+                fi
+                LOGI "Will use port: ${WebPort} to issue certificates. Please make sure this port is open."
+
+                # issue the certificate
+                ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+                ~/.acme.sh/acme.sh --issue -d ${domain} --listen-v6 --standalone --httpport ${WebPort}
+                if [ $? -ne 0 ]; then
+                    LOGE "Issuing certificate failed, please check logs."
+                    rm -rf ~/.acme.sh/${domain}
+                    exit 1
+                else
+                    LOGE "Issuing certificate succeeded, installing certificates..."
+                fi
+
+                # install the certificate
+                ~/.acme.sh/acme.sh --installcert -d ${domain} \
+                    --key-file /root/cert/${domain}/privkey.pem \
+                    --fullchain-file /root/cert/${domain}/fullchain.pem
+
+                if [ $? -ne 0 ]; then
+                    LOGE "Installing certificate failed, exiting."
+                    rm -rf ~/.acme.sh/${domain}
+                    exit 1
+                else
+                    LOGI "Installing certificate succeeded, enabling auto renew..."
+                fi
+
+                # enable auto-renew
+                ~/.acme.sh/acme.sh --upgrade --auto-upgrade
+                if [ $? -ne 0 ]; then
+                    LOGE "Auto renew failed, certificate details:"
+                    ls -lah cert/*
+                    chmod 755 $certPath/*
+                    exit 1
+                else
+                    LOGI "Auto renew succeeded, certificate details:"
+                    ls -lah cert/*
+                    chmod 755 $certPath/*
+                fi
+
+                # Set panel paths after successful certificate installation
+                local webCertFile="/root/cert/${domain}/fullchain.pem"
+                local webKeyFile="/root/cert/${domain}/privkey.pem"
+
+                if [[ -f "$webCertFile" && -f "$webKeyFile" ]]; then
+                    /usr/local/x-ui/x-ui cert -webCert "$webCertFile" -webCertKey "$webKeyFile"
+                    LOGI "Panel paths set for domain: $domain"
+                    LOGI "  - Certificate File: $webCertFile"
+                    LOGI "  - Private Key File: $webKeyFile"
+                    echo -e "${green}Access URL: https://${domain}:${existing_port}${existing_webBasePath}${plain}"
+                    restart
+                else
+                    LOGE "Error: Certificate or private key file not found for domain: $domain."
+                fi
+
+                read -p "Would you like to customize the Panel Port settings? (If not, a random port will be applied) [y/n]: " config_confirm
+                if [[ "${config_confirm}" == "y" || "${config_confirm}" == "Y" ]]; then
+                    read -p "Please set up the panel port: " config_port
+                    echo -e "${yellow}Your Panel Port is: ${config_port}${plain}"
+                else
+                    local config_port=$(shuf -i 1024-62000 -n 1)
+                    echo -e "${yellow}Generated random port: ${config_port}${plain}"
+                fi
+
+                /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}" -port "${config_port}" -webBasePath "${config_webBasePath}"
+                echo -e "This is a fresh installation, generating random login info for security concerns:"
+                echo -e "###############################################"
+                echo -e "${green}Username: ${config_username}${plain}"
+                echo -e "${green}Password: ${config_password}${plain}"
+                echo -e "${green}Port: ${config_port}${plain}"
+                echo -e "${green}WebBasePath: ${config_webBasePath}${plain}"
+                echo -e "${green}Access URL: https://${domain}:${config_port}/${config_webBasePath}${plain}"
+                echo -e "###############################################"
             else
-                rm -rf "$certPath"
-                mkdir -p "$certPath"
+                local config_webBasePath=$(gen_random_string 15)
+                echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
+                /usr/local/x-ui/x-ui setting -webBasePath "${config_webBasePath}"
+                echo -e "${green}New WebBasePath: ${config_webBasePath}${plain}"
+                echo -e "${green}Access URL: https://${domain}:${existing_port}/${config_webBasePath}${plain}"
             fi
-
-            # get the port number for the standalone server
-            local WebPort=80
-            read -p "Please choose which port to use (default is 80): " WebPort
-            if [[ ${WebPort} -gt 65535 || ${WebPort} -lt 1 ]]; then
-                LOGE "Your input ${WebPort} is invalid, will use default port 80."
-                WebPort=80
-            fi
-            LOGI "Will use port: ${WebPort} to issue certificates. Please make sure this port is open."
-
-            # issue the certificate
-            ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-            ~/.acme.sh/acme.sh --issue -d ${domain} --listen-v6 --standalone --httpport ${WebPort}
-            if [ $? -ne 0 ]; then
-                LOGE "Issuing certificate failed, please check logs."
-                rm -rf ~/.acme.sh/${domain}
-                exit 1
-            else
-                LOGE "Issuing certificate succeeded, installing certificates..."
-            fi
-
-            # install the certificate
-            ~/.acme.sh/acme.sh --installcert -d ${domain} \
-                --key-file /root/cert/${domain}/privkey.pem \
-                --fullchain-file /root/cert/${domain}/fullchain.pem
-
-            if [ $? -ne 0 ]; then
-                LOGE "Installing certificate failed, exiting."
-                rm -rf ~/.acme.sh/${domain}
-                exit 1
-            else
-                LOGI "Installing certificate succeeded, enabling auto renew..."
-            fi
-
-            # enable auto-renew
-            ~/.acme.sh/acme.sh --upgrade --auto-upgrade
-            if [ $? -ne 0 ]; then
-                LOGE "Auto renew failed, certificate details:"
-                ls -lah cert/*
-                chmod 755 $certPath/*
-                exit 1
-            else
-                LOGI "Auto renew succeeded, certificate details:"
-                ls -lah cert/*
-                chmod 755 $certPath/*
-            fi
-
-            # Set panel paths after successful certificate installation
-            local webCertFile="/root/cert/${domain}/fullchain.pem"
-            local webKeyFile="/root/cert/${domain}/privkey.pem"
-
-            if [[ -f "$webCertFile" && -f "$webKeyFile" ]]; then
-                /usr/local/x-ui/x-ui cert -webCert "$webCertFile" -webCertKey "$webKeyFile"
-                LOGI "Panel paths set for domain: $domain"
-                LOGI "  - Certificate File: $webCertFile"
-                LOGI "  - Private Key File: $webKeyFile"
-                echo -e "${green}Access URL: https://${domain}:${existing_port}${existing_webBasePath}${plain}"
-                restart
-            else
-                LOGE "Error: Certificate or private key file not found for domain: $domain."
-            fi
-
-            read -p "Would you like to customize the Panel Port settings? (If not, a random port will be applied) [y/n]: " config_confirm
-            if [[ "${config_confirm}" == "y" || "${config_confirm}" == "Y" ]]; then
-                read -p "Please set up the panel port: " config_port
-                echo -e "${yellow}Your Panel Port is: ${config_port}${plain}"
-            else
-                local config_port=$(shuf -i 1024-62000 -n 1)
-                echo -e "${yellow}Generated random port: ${config_port}${plain}"
-            fi
-
-            /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}" -port "${config_port}" -webBasePath "${config_webBasePath}"
-            echo -e "This is a fresh installation, generating random login info for security concerns:"
-            echo -e "###############################################"
-            echo -e "${green}Username: ${config_username}${plain}"
-            echo -e "${green}Password: ${config_password}${plain}"
-            echo -e "${green}Port: ${config_port}${plain}"
-            echo -e "${green}WebBasePath: ${config_webBasePath}${plain}"
-            echo -e "${green}Access URL: https://${domain}:${config_port}/${config_webBasePath}${plain}"
-            echo -e "###############################################"
         else
-            local config_webBasePath=$(gen_random_string 15)
-            echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
-            /usr/local/x-ui/x-ui setting -webBasePath "${config_webBasePath}"
-            echo -e "${green}New WebBasePath: ${config_webBasePath}${plain}"
-            echo -e "${green}Access URL: https://${domain}:${existing_port}/${config_webBasePath}${plain}"
-        fi
-    else
-        if [[ "$existing_hasDefaultCredential" == "true" ]]; then
-            local config_username=$(gen_random_string 10)
-            local config_password=$(gen_random_string 10)
+            if [[ "$existing_hasDefaultCredential" == "true" ]]; then
+                local config_username=$(gen_random_string 10)
+                local config_password=$(gen_random_string 10)
 
-            echo -e "${yellow}Default credentials detected. Security update required...${plain}"
-            /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}"
-            echo -e "Generated new random login credentials:"
-            echo -e "###############################################"
-            echo -e "${green}Username: ${config_username}${plain}"
-            echo -e "${green}Password: ${config_password}${plain}"
-            echo -e "###############################################"
-        else
-            echo -e "${green}Username, Password, and WebBasePath are properly set. Exiting...${plain}"
+                echo -e "${yellow}Default credentials detected. Security update required...${plain}"
+                /usr/local/x-ui/x-ui setting -username "${config_username}" -password "${config_password}"
+                echo -e "Generated new random login credentials:"
+                echo -e "###############################################"
+                echo -e "${green}Username: ${config_username}${plain}"
+                echo -e "${green}Password: ${config_password}${plain}"
+                echo -e "###############################################"
+            else
+                echo -e "${green}Username, Password, and WebBasePath are properly set. Exiting...${plain}"
+            fi
         fi
+
+        /usr/local/x-ui/x-ui migrate
     fi
-
-    /usr/local/x-ui/x-ui migrate
 }
 
 install_x-ui() {
@@ -308,26 +314,27 @@ install_x-ui() {
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
-    echo -e "${green}x-ui ${tag_version}${plain} installation finished, it is running now..."
-    echo -e ""
-    echo -e "┌───────────────────────────────────────────────────────┐
-│  ${blue}x-ui control menu usages (subcommands):${plain}              │
-│                                                       │
-│  ${blue}x-ui${plain}              - Admin Management Script          │
-│  ${blue}x-ui start${plain}        - Start                            │
-│  ${blue}x-ui stop${plain}         - Stop                             │
-│  ${blue}x-ui restart${plain}      - Restart                          │
-│  ${blue}x-ui status${plain}       - Current Status                   │
-│  ${blue}x-ui settings${plain}     - Current Settings                 │
-│  ${blue}x-ui enable${plain}       - Enable Autostart on OS Startup   │
-│  ${blue}x-ui disable${plain}      - Disable Autostart on OS Startup  │
-│  ${blue}x-ui log${plain}          - Check logs                       │
-│  ${blue}x-ui banlog${plain}       - Check Fail2ban ban logs          │
-│  ${blue}x-ui update${plain}       - Update                           │
-│  ${blue}x-ui legacy${plain}       - legacy version                   │
-│  ${blue}x-ui install${plain}      - Install                          │
-│  ${blue}x-ui uninstall${plain}    - Uninstall                        │
-└───────────────────────────────────────────────────────┘"
+
+    echo -e "${green}x-ui ${tag_version}${plain} installation finished, it is running now...\n"
+
+    echo -e "┌───────────────────────────────────────────────────────┐"
+    echo -e "│  ${blue}x-ui control menu usages (subcommands):${plain}              │"
+    echo -e "│                                                       │"
+    echo -e "│  ${blue}x-ui${plain}              - Admin Management Script          │"
+    echo -e "│  ${blue}x-ui start${plain}        - Start                            │"
+    echo -e "│  ${blue}x-ui stop${plain}         - Stop                             │"
+    echo -e "│  ${blue}x-ui restart${plain}      - Restart                          │"
+    echo -e "│  ${blue}x-ui status${plain}       - Current Status                   │"
+    echo -e "│  ${blue}x-ui settings${plain}     - Current Settings                 │"
+    echo -e "│  ${blue}x-ui enable${plain}       - Enable Autostart on OS Startup   │"
+    echo -e "│  ${blue}x-ui disable${plain}      - Disable Autostart on OS Startup  │"
+    echo -e "│  ${blue}x-ui log${plain}          - Check logs                       │"
+    echo -e "│  ${blue}x-ui banlog${plain}       - Check Fail2ban ban logs          │"
+    echo -e "│  ${blue}x-ui update${plain}       - Update                           │"
+    echo -e "│  ${blue}x-ui legacy${plain}       - Legacy version                   │"
+    echo -e "│  ${blue}x-ui install${plain}      - Install                          │"
+    echo -e "│  ${blue}x-ui uninstall${plain}    - Uninstall                        │"
+    echo -e "└───────────────────────────────────────────────────────┘"
 }
 
 echo -e "${green}Running...${plain}"
