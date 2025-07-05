@@ -1,0 +1,166 @@
+name: Update Go Dependencies
+
+on:
+#  schedule:
+#    - cron: '0 0 * * 1'  # Запуск каждую неделю в понедельник в 00:00 UTC
+  workflow_dispatch:
+    inputs:
+      xray_version:
+        description: "Версия Xray-core (например, v24.12.15). Оставьте пустым для последней."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:  
+      - name: Checkout repository  
+        uses: actions/checkout@v4  
+        with:  
+          fetch-depth: 0  
+          token: ${{ secrets.GITHUB_TOKEN }}  
+  
+      - name: Setup Go  
+        uses: actions/setup-go@v5  
+        with:  
+          go-version-file: go.mod  
+          check-latest: true  
+          cache: true  
+  
+      - name: Determine Xray-core version  
+        id: xray_version  
+        run: |  
+          set -euxo pipefail  
+            
+          # Проверка, установлен ли jq  
+          if ! command -v jq &>/dev/null; then  
+            echo "Error: jq is not installed." >&2  
+            exit 1  
+          fi  
+  
+          if [[ -n "${{ github.event.inputs.xray_version }}" ]]; then  
+            XRAY_VERSION="${{ github.event.inputs.xray_version }}"  
+            echo "Using user-defined Xray-core version: $XRAY_VERSION"  
+          else  
+            echo "Fetching latest Xray-core release..."  
+            API_RESPONSE=$(curl -fsSL "https://api.github.com/repos/XTLS/Xray-core/releases") || {  
+              echo "Error: Failed to fetch releases from GitHub API" >&2  
+              exit 1  
+            }  
+  
+            XRAY_VERSION=$(echo "$API_RESPONSE" | jq -r 'map(select(.prerelease == false)) | .[0].tag_name')  
+            if [[ -z "$XRAY_VERSION" || "$XRAY_VERSION" == "null" ]]; then  
+              echo "Error: Unable to determine latest release" >&2  
+              exit 1  
+            fi  
+  
+            echo "Latest release detected: $XRAY_VERSION"  
+          fi  
+  
+          COMMIT_HASH=$(curl -fsSL "https://api.github.com/repos/XTLS/Xray-core/git/ref/tags/${XRAY_VERSION}" | jq -r .object.sha) || {  
+            echo "Error: Failed to fetch commit SHA for tag $XRAY_VERSION" >&2  
+            exit 1  
+          }  
+  
+          if [[ -z "$COMMIT_HASH" || "$COMMIT_HASH" == "null" ]]; then  
+            echo "Error: Commit hash is empty for $XRAY_VERSION" >&2  
+            exit 1  
+          fi  
+  
+          echo "xray_version=$XRAY_VERSION" >> $GITHUB_ENV  
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_ENV  
+  
+      - name: Check go.mod and go.sum exist  
+        run: |  
+          set -euxo pipefail  
+          test -f go.mod || { echo "Error: go.mod file not found"; exit 1; }  
+          test -f go.sum || { echo "go.sum file not found, initializing it..."; go mod tidy; }  
+  
+      - name: Clean Go module cache  
+        run: |  
+          go clean -modcache  
+          go clean -cache  
+  
+      - name: Update dependencies
+        id: update
+        run: |
+          set -euxo pipefail
+
+          echo "Установка фиксированных версий зависимостей..."
+          go get gorm.io/gorm@v1.25.12
+          go get github.com/mymmrac/telego@v0.32.0
+          go get gvisor.dev/gvisor@v0.0.0-20250428193742-2d800c3129d5
+
+          echo "Обновление остальных зависимостей..."
+          DEP_LIST=$(go list -f '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}' -m all | grep -Ev '^(gorm.io/gorm|gvisor.dev/gvisor|github.com/mymmrac/telego|github.com/xtls/xray-core)$')
+          if [[ -n "$DEP_LIST" ]]; then
+            echo "$DEP_LIST" | xargs -r go get -u
+          else
+            echo "Нет зависимостей для обновления"
+          fi
+
+           echo "Обновление Xray-core до версии ${{ env.xray_version }} (commit: ${{ env.commit_hash }})"
+           go get github.com/xtls/xray-core@${{ env.commit_hash }}
+
+           echo "Повторная фиксация версий зависимостей..."
+           go get gorm.io/gorm@v1.25.12
+           go get github.com/mymmrac/telego@v0.32.0
+           go get gvisor.dev/gvisor@v0.0.0-20250503011706-39ed1f5ac29c
+           go get golang.zx2c4.com/wireguard@v0.0.0-20250521234502-f333402bd9cb
+
+           go mod tidy
+           go mod verify
+
+           echo "Обновленные зависимости:"
+           go list -m all
+        
+  
+      - name: Check for changes  
+        id: check  
+        run: |  
+          set -euxo pipefail  
+          if git diff --quiet go.mod go.sum; then  
+            echo "changes=false" >> $GITHUB_OUTPUT  
+            echo "No changes detected in dependencies"  
+          else  
+            echo "changes=true" >> $GITHUB_OUTPUT  
+            echo "Changes detected in dependencies:"  
+            git diff go.mod || true  
+          fi  
+  
+      - name: Commit and push changes  
+        if: steps.check.outputs.changes == 'true'  
+        run: |  
+          set -euxo pipefail  
+  
+          git config --global user.name "github-actions[bot]"  
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"  
+            
+          git add go.mod go.sum  
+          git commit -m "chore(deps): update Go dependencies including xray-core to ${{ env.xray_version }}"  
+  
+          max_attempts=3  
+          attempt=1  
+  
+          while [ $attempt -le $max_attempts ]; do  
+            if git push origin ${{ github.ref }}; then  
+              echo "Successfully pushed changes on attempt $attempt"  
+              break  
+            else  
+              if [ $attempt -eq $max_attempts ]; then  
+                echo "Failed to push after $max_attempts attempts" >&2  
+                exit 1  
+              fi  
+              echo "Push failed on attempt $attempt, retrying..."  
+              attempt=$((attempt + 1))  
+                
+              git fetch origin  
+              git reset --hard origin/main  
+              sleep 5  
+            fi  
+          done
