@@ -92,7 +92,7 @@ jobs:
           set -euxo pipefail
 
           echo "Установка фиксированных версий зависимостей..."
-          #go get gorm.io/gorm@v1.25.12
+          go get gorm.io/gorm@v1.30.0
           go get github.com/mymmrac/telego@v0.32.0
           go get gvisor.dev/gvisor@v0.0.0-20250503011706-39ed1f5ac29c
 
