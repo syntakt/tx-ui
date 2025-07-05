@@ -615,11 +615,24 @@ class Outbound extends CommonClass {
     }
 
     canEnableMux() {
-        if (this.settings.flow && this.settings.flow != '') {
+        if (this.settings.flow && this.settings.flow !== '') {
             this.mux.enabled = false;
             return false;
         }
-        return [Protocols.VMess, Protocols.VLESS, Protocols.Trojan, Protocols.Shadowsocks, Protocols.HTTP, Protocols.Socks].includes(this.protocol);
+        if (this.stream.network === 'xhttp') {
+            this.mux.enabled = false;
+            return false;
+        }
+
+        // Allow Mux only for these protocols
+        return [
+            Protocols.VMess,
+            Protocols.VLESS,
+            Protocols.Trojan,
+            Protocols.Shadowsocks,
+            Protocols.HTTP,
+            Protocols.Socks
+        ].includes(this.protocol);
     }
 
     hasVnext() {
