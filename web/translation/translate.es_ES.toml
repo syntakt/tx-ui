@@ -444,6 +444,14 @@
 "edit" = "Editar Servidor"
 "domains" = "Dominios"
 "expectIPs" = "IPs esperadas"
+"disableCache" = "Deshabilitar caché"
+"disableCacheDesc" = "Deshabilita el almacenamiento en caché de DNS"
+"disableFallback" = "Deshabilitar Fallback"
+"disableFallbackDesc" = "Deshabilita las consultas DNS de respaldo"
+"disableFallbackIfMatch" = "Deshabilitar Fallback si coincide"
+"disableFallbackIfMatchDesc" = "Deshabilita las consultas DNS de respaldo cuando se encuentra un dominio coincidente en la lista del servidor DNS"
+"useSystemHosts" = "Usar hosts del sistema"
+"useSystemHostsDesc" = "Usar el archivo hosts del sistema instalado"
 
 [pages.xray.fakedns]
 "add" = "Agregar DNS Falso"

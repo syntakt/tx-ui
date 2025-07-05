@@ -444,6 +444,14 @@
 "edit" = "Sunting Server"
 "domains" = "Domains"
 "expectIPs" = "IP yang Diharapkan"
+"disableCache" = "Nonaktifkan cache"
+"disableCacheDesc" = "Menonaktifkan cache DNS"
+"disableFallback" = "Nonaktifkan Fallback"
+"disableFallbackDesc" = "Menonaktifkan permintaan DNS fallback"
+"disableFallbackIfMatch" = "Nonaktifkan Fallback Jika Cocok"
+"disableFallbackIfMatchDesc" = "Menonaktifkan permintaan DNS fallback ketika daftar domain yang cocok pada server DNS ditemukan"
+"useSystemHosts" = "Gunakan Hosts Sistem"
+"useSystemHostsDesc" = "Gunakan file hosts dari sistem yang terpasang"
 
 [pages.xray.fakedns]
 "add" = "Tambahkan DNS Palsu"

@@ -442,6 +442,14 @@
 "edit" = "Sunucuyu Düzenle"
 "domains" = "Alan Adları"
 "expectIPs" = "Beklenen IP'ler"
+"disableCache" = "Önbelleği Devre Dışı Bırak"
+"disableCacheDesc" = "DNS önbelleğini devre dışı bırakır"
+"disableFallback" = "Yedeklemeyi Devre Dışı Bırak"
+"disableFallbackDesc" = "Yedek DNS sorgularını devre dışı bırakır"
+"disableFallbackIfMatch" = "Eşleşirse Yedeklemeyi Devre Dışı Bırak"
+"disableFallbackIfMatchDesc" = "DNS sunucusunun eşleşen alan adı listesine denk gelirse yedek DNS sorgularını devre dışı bırakır"
+"useSystemHosts" = "Sistem Hosts Dosyasını Kullan"
+"useSystemHostsDesc" = "Yüklü sistemin hosts dosyasını kullan"
 
 [pages.xray.fakedns]
 "add" = "Sahte DNS Ekle"
@@ -533,7 +541,7 @@
 "serverMemory" = "📋 RAM: {{ .Current }}/{{ .Total }}\r\n"
 "tcpCount" = "🔹 TCP: {{ .Count }}\r\n"
 "udpCount" = "🔸 UDP: {{ .Count }}\r\n"
-"traffic" = "🚦 Trafik: {{ .Total }} (↑{{ .Upload }},↓{{ .Download }})\r\n"
+"traffic" = "🚦 Trafik: {{ .Total }} (↑{{ .Upload }},↓{{ .Download }}\r\n"
 "xrayStatus" = "ℹ️ Durum: {{ .State }}\r\n"
 "username" = "👤 Kullanıcı Adı: {{ .Username }}\r\n"
 "password" = "👤 Şifre: {{ .Password }}\r\n"

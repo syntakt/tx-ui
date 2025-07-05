@@ -442,6 +442,14 @@
 "edit" = "Редагувати сервер"
 "domains" = "Домени"
 "expectIPs" = "Очікувані IP"
+"disableCache" = "Вимкнути кеш"
+"disableCacheDesc" = "Вимикає кешування DNS"
+"disableFallback" = "Вимкнути Fallback"
+"disableFallbackDesc" = "Вимикає резервні DNS-запити"
+"disableFallbackIfMatch" = "Вимкнути Fallback при збігу"
+"disableFallbackIfMatchDesc" = "Вимикає резервні DNS-запити, коли збігається список доменів сервера DNS"
+"useSystemHosts" = "Використовувати системний hosts"
+"useSystemHostsDesc" = "Використовувати файл hosts з встановленої системи"
 
 [pages.xray.fakedns]
 "add" = "Додати підроблений DNS"

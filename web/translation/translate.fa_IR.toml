@@ -445,6 +445,14 @@
 "edit" = "ویرایش سرور"
 "domains" = "دامنه‌ها"
 "expectIPs" = "آی‌پی‌های مورد انتظار"
+"disableCache" = "غیرفعال‌سازی کش"
+"disableCacheDesc" = "غیرفعال کردن کش DNS"
+"disableFallback" = "غیرفعال‌سازی جایگزین"
+"disableFallbackDesc" = "غیرفعال کردن درخواست‌های جایگزین DNS"
+"disableFallbackIfMatch" = "غیرفعال‌سازی جایگزین در صورت تطابق"
+"disableFallbackIfMatchDesc" = "در صورت تطابق دامنه با لیست سرور DNS، درخواست جایگزین DNS غیرفعال می‌شود"
+"useSystemHosts" = "استفاده از فایل hosts سیستم"
+"useSystemHostsDesc" = "استفاده از فایل hosts سیستم نصب‌شده"
 
 [pages.xray.fakedns]
 "add" = "افزودن دی‌ان‌اس جعلی"

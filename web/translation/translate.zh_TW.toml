@@ -442,6 +442,14 @@
 "edit" = "編輯伺服器"
 "domains" = "域"
 "expectIPs" = "預期 IP"
+"disableCache" = "停用快取"
+"disableCacheDesc" = "停用 DNS 快取"
+"disableFallback" = "停用備援"
+"disableFallbackDesc" = "停用備援 DNS 查詢"
+"disableFallbackIfMatch" = "符合時停用備援"
+"disableFallbackIfMatchDesc" = "當命中 DNS 伺服器的匹配域名清單時停用備援 DNS 查詢"
+"useSystemHosts" = "使用系統 Hosts"
+"useSystemHostsDesc" = "使用已安裝系統的 hosts 檔案"
 
 [pages.xray.fakedns]
 "add" = "新增假 DNS"

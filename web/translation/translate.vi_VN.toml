@@ -442,6 +442,14 @@
 "edit" = "Chỉnh sửa máy chủ"
 "domains" = "Tên miền"
 "expectIPs" = "Các IP Dự Kiến"
+"disableCache" = "Tắt bộ nhớ đệm"
+"disableCacheDesc" = "Tắt bộ nhớ đệm DNS"
+"disableFallback" = "Tắt Fallback"
+"disableFallbackDesc" = "Tắt truy vấn DNS dự phòng"
+"disableFallbackIfMatch" = "Tắt Fallback nếu khớp"
+"disableFallbackIfMatchDesc" = "Tắt truy vấn DNS dự phòng khi danh sách tên miền khớp với máy chủ DNS"
+"useSystemHosts" = "Sử dụng Hosts hệ thống"
+"useSystemHostsDesc" = "Sử dụng tệp hosts từ hệ thống đã cài đặt"
 
 [pages.xray.fakedns]
 "add" = "Thêm DNS giả"

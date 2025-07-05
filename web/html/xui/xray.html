@@ -675,13 +675,17 @@
                             <a-col :lg="24" :xl="12">
                                 <a-select v-model="dnsStrategy" style="width: 100%"
                                     :dropdown-class-name="themeSwitcher.currentTheme">
-                                    <a-select-option :value="l" :label="l" v-for="l in ['UseIP', 'UseIPv4', 'UseIPv6']">
+                                    <a-select-option :value="l" :label="l" v-for="l in ['UseSystem', 'UseIP', 'UseIPv4', 'UseIPv6']">
                                         [[ l ]]
                                     </a-select-option>
                                 </a-select>
                             </a-col>
                         </a-row>
                     </a-list-item>
+                    <setting-list-item type="switch" title='{{ i18n "pages.xray.dns.disableCache" }}' desc='{{ i18n "pages.xray.dns.disableCacheDesc" }}' v-model="dnsDisableCache"></setting-list-item>
+                    <setting-list-item type="switch" title='{{ i18n "pages.xray.dns.disableFallback" }}' desc='{{ i18n "pages.xray.dns.disableFallbackDesc" }}' v-model="dnsDisableFallback"></setting-list-item>
+                    <setting-list-item type="switch" title='{{ i18n "pages.xray.dns.disableFallbackIfMatch" }}' desc='{{ i18n "pages.xray.dns.disableFallbackIfMatchDesc" }}' v-model="dnsDisableFallbackIfMatch"></setting-list-item>
+                    <setting-list-item type="switch" title='{{ i18n "pages.xray.dns.useSystemHosts" }}' desc='{{ i18n "pages.xray.dns.useSystemHostsDesc" }}' v-model="dnsUseSystemHosts"></setting-list-item>
                     <a-divider>DNS</a-divider>
                     <a-button type="primary" icon="plus" @click="addDNSServer()" style="margin-bottom: 10px;">{{ i18n
                         "pages.xray.dns.add" }}</a-button>
@@ -1995,6 +1999,62 @@
                 set: function (newValue) {
                     newTemplateSettings = this.templateSettings;
                     newTemplateSettings.dns.tag =  newValue;
+                    this.templateSettings = newTemplateSettings;
+                }
+            },
+            dnsDisableCache: {
+                get: function () {
+                    return this.enableDNS ? this.templateSettings.dns.disableCache : false;
+                },
+                set: function (newValue) {
+                    newTemplateSettings = this.templateSettings;
+                    if (newValue) {
+                        newTemplateSettings.dns.disableCache = newValue;
+                    } else {
+                        delete newTemplateSettings.dns.disableCache
+                    }
+                    this.templateSettings = newTemplateSettings;
+                }
+            },
+            dnsDisableFallback: {
+                get: function () {
+                    return this.enableDNS ? this.templateSettings.dns.disableFallback : false;
+                },
+                set: function (newValue) {
+                    newTemplateSettings = this.templateSettings;
+                    if (newValue) {
+                        newTemplateSettings.dns.disableFallback = newValue;
+                    } else {
+                        delete newTemplateSettings.dns.disableFallback
+                    }
+                    this.templateSettings = newTemplateSettings;
+                }
+            },
+            dnsDisableFallbackIfMatch: {
+                get: function () {
+                    return this.enableDNS ? this.templateSettings.dns.disableFallbackIfMatch : false;
+                },
+                set: function (newValue) {
+                    newTemplateSettings = this.templateSettings;
+                    if (newValue) {
+                        newTemplateSettings.dns.disableFallbackIfMatch = newValue;
+                    } else {
+                        delete newTemplateSettings.dns.disableFallbackIfMatch
+                    }
+                    this.templateSettings = newTemplateSettings;
+                }
+            },
+            dnsUseSystemHosts: {
+                get: function () {
+                    return this.enableDNS ? this.templateSettings.dns.useSystemHosts : false;
+                },
+                set: function (newValue) {
+                    newTemplateSettings = this.templateSettings;
+                    if (newValue) {
+                        newTemplateSettings.dns.useSystemHosts = newValue;
+                    } else {
+                        delete newTemplateSettings.dns.useSystemHosts
+                    }
                     this.templateSettings = newTemplateSettings;
                 }
             },

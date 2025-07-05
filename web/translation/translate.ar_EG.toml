@@ -479,6 +479,8 @@
 "disableFallbackDesc" = "بيعطل استعلامات DNS الاحتياطية"
 "disableFallbackIfMatch" = "تعطيل النسخ الاحتياطي عند التطابق"
 "disableFallbackIfMatchDesc" = "بيعطل استعلامات DNS الاحتياطية لما يتحقق تطابق مع قائمة الدومينات"
+"useSystemHosts" = "استخدم Hosts النظام"
+"useSystemHostsDesc" = "استخدم ملف hosts من النظام المثبت"
 "strategy" = "استراتيجية الاستعلام"
 "strategyDesc" = "الاستراتيجية العامة لحل أسماء الدومين"
 "add" = "أضف سيرفر"

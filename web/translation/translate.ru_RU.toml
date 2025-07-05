@@ -444,6 +444,14 @@
 "edit" = "Редактировать сервер"
 "domains" = "Домены"
 "expectIPs" = "Ожидаемые IP"
+"disableCache" = "Отключить кэширование"
+"disableCacheDesc" = "Отключает кэширование DNS"
+"disableFallback" = "Отключить резервный DNS"
+"disableFallbackDesc" = "Отключает резервные DNS-запросы"
+"disableFallbackIfMatch" = "Отключить резервный DNS при совпадении"
+"disableFallbackIfMatchDesc" = "Отключает резервные DNS-запросы при совпадении с доменом из списка DNS-сервера"
+"useSystemHosts" = "Использовать системный hosts"
+"useSystemHostsDesc" = "Использовать файл hosts установленной системы"
 
 [pages.xray.fakedns]
 "add" = "Добавить поддельный DNS"
