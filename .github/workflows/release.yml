@@ -14,13 +14,13 @@ jobs:
       matrix:
         platform:
           - amd64
-          - arm64
-          - armv7
-          - armv6
-          - 386
-          - armv5
-          - s390x
-          - windows-amd64   # Added Windows support
+#          - arm64
+#          - armv7
+#          - armv6
+#          - 386
+#         - armv5
+#          - s390x
+#          - windows-amd64   # Added Windows support
     runs-on: ${{ matrix.platform == 'windows-amd64' && 'windows-latest' || 'ubuntu-22.04' }}
     steps:
       - name: Checkout repository
