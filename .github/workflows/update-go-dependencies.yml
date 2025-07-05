@@ -96,7 +96,7 @@ jobs:
           go get github.com/mymmrac/telego@v0.32.0
           go get gvisor.dev/gvisor@v0.0.0-20250503011706-39ed1f5ac29c
           go get golang.zx2c4.com/wireguard@v0.0.0-20250521234502-f333402bd9cb
-          go get github.com/klauspost/cpuid/v2@v2.2.10
+          #go get github.com/klauspost/cpuid/v2@v2.2.10
 
           echo "Обновление остальных зависимостей..."
           DEP_LIST=$(go list -f '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}' -m all | grep -Ev '^(gorm.io/gorm|gvisor.dev/gvisor|github.com/mymmrac/telego|github.com/xtls/xray-core)$')
@@ -114,7 +114,7 @@ jobs:
            go get github.com/mymmrac/telego@v0.32.0
            go get gvisor.dev/gvisor@v0.0.0-20250503011706-39ed1f5ac29c
            go get golang.zx2c4.com/wireguard@v0.0.0-20250521234502-f333402bd9cb
-           go get github.com/klauspost/cpuid/v2@v2.2.10
+           #go get github.com/klauspost/cpuid/v2@v2.2.10
 
            go mod tidy
            go mod verify
